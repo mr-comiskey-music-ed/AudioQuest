@@ -1,0 +1,6 @@
+{
+  "name": "AudioQuest - Studio Mixing & Recording Adventure",
+  "description": "Choose-your-own-adventure interactive audio engineering game for music production students with base64 student submission codes and teacher grading inspector.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
