@@ -11,6 +11,9 @@ interface AudioVisualizerProps {
 const DEMO_TO_ICON: Record<string, AudioEffectType> = {
   'de-esser': 'de-esser',
   compressor: 'compressor',
+  'serial-compression': 'serial-compression',
+  'parallel-compression': 'parallel-compression',
+  'sidechain-compression': 'sidechain-compression',
   filter: 'hi-pass-filter',
   saturation: 'saturation',
   chorus: 'chorus',
@@ -36,6 +39,9 @@ export const AudioVisualizer: React.FC<AudioVisualizerProps> = ({ demoType, titl
   const labels: Record<string, { name: string; desc: string }> = {
     'de-esser': { name: 'De-Esser Action', desc: 'Listen to frequency-dependent high attenuation' },
     compressor: { name: 'Compression Clamp', desc: 'Hear dynamic leveling and peak suppression' },
+    'serial-compression': { name: 'Serial Compression', desc: 'Chaining multiple units for transparent gain reduction' },
+    'parallel-compression': { name: 'Parallel Compression', desc: 'Blending squashed parallel copy with dry signal' },
+    'sidechain-compression': { name: 'Sidechain Compression', desc: 'Ducking volume automatically from an external trigger' },
     filter: { name: 'Filter Frequency Sweep', desc: 'Listen to high-pass cutoff sweep in action' },
     saturation: { name: 'Harmonic Saturation', desc: 'Warm analog clipping & harmonic excitation' },
     chorus: { name: 'Chorus Doubling', desc: 'Detuned multi-voice modulation spread' },

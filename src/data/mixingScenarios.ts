@@ -5,18 +5,18 @@ export const mixingScenarios: Scenario[] = [
     id: 'lead-vocals',
     track: 'mixing',
     category: 'instrument',
-    title: 'Lead Vocals',
-    subtitle: '8 Questions · Dynamic Control, Tone, Mics & Space',
+    title: 'Vocals',
+    subtitle: '7 Questions · Dynamic Control, Tone, Mics & Space',
     description: 'Sculpt a crisp, up-front vocal that cuts through the instrumentation without harshness or muddy buildup.',
     iconName: 'vocal-mic',
     accentColor: 'indigo',
-    completionTitle: 'You did it! Your lead vocal sounds good! 🎤',
+    completionTitle: 'You did it! Your vocal sounds good! 🎤',
     completionSubtitle: 'Your vocal is dynamic, warm, sitting right on top of the mix with zero sibilance or clutter.',
     questions: [
       {
         id: 'vox-1',
         prompt: 'Which of these will best help you reduce sibilance?',
-        contextKicker: 'Question 1 of 8',
+        contextKicker: 'Question 1 of 7',
         options: [
           { id: 'opt-1', label: 'De-Esser', explanation: 'Correct! A De-Esser acts as a frequency-dependent compressor specifically tuned to attenuate harsh "s", "t", and "ch" sibilance in the 5kHz–8kHz region.', isCorrect: true, soundDemoType: 'de-esser' },
           { id: 'opt-2', label: 'Tape Saturation', explanation: 'Saturation adds upper harmonics and warmth, which can actually accentuate harsh sibilance.', isCorrect: false },
@@ -27,7 +27,7 @@ export const mixingScenarios: Scenario[] = [
       {
         id: 'vox-2',
         prompt: 'Which of these will best help you even out the volume of the vocal?',
-        contextKicker: 'Question 2 of 8',
+        contextKicker: 'Question 2 of 7',
         options: [
           { id: 'opt-1', label: 'Compressor', explanation: 'Correct! A compressor reduces the dynamic range between loud shouts and quiet whispers, creating steady level consistency so quiet syllables match loud passages.', isCorrect: true, soundDemoType: 'compressor' },
           { id: 'opt-2', label: 'Stereo Delay', explanation: 'Delay produces time-delayed echoes, not dynamic volume regulation.', isCorrect: false },
@@ -38,7 +38,7 @@ export const mixingScenarios: Scenario[] = [
       {
         id: 'vox-3',
         prompt: 'Which of these plugins can best help you reduce muddiness?',
-        contextKicker: 'Question 3 of 8',
+        contextKicker: 'Question 3 of 7',
         options: [
           { id: 'opt-1', label: 'Parametric EQ (cut 200-400 Hz)', explanation: 'Correct! Carving out the 200–400Hz frequency pocket removes boxy room resonance and vocal chestiness that naturally accumulates in this range.', isCorrect: true, soundDemoType: 'filter' },
           { id: 'opt-2', label: 'Distortion / Overdrive', explanation: 'Distortion introduces harmonic distortion that increases frequency clutter and thickness.', isCorrect: false },
@@ -49,7 +49,7 @@ export const mixingScenarios: Scenario[] = [
       {
         id: 'vox-4',
         prompt: 'Which of these will best help you add crunch and upper harmonics to a vocal?',
-        contextKicker: 'Question 4 of 8',
+        contextKicker: 'Question 4 of 7',
         options: [
           { id: 'opt-1', label: 'Tape / Tube Saturation', explanation: 'Correct! Analog tube and tape saturation generates even and odd harmonics, gently clipping peaks to make vocals sound denser and more exciting.', isCorrect: true, soundDemoType: 'saturation' },
           { id: 'opt-2', label: 'Noise Gate', explanation: 'A gate mutes low volume background audio; it does not add harmonics.', isCorrect: false },
@@ -60,18 +60,18 @@ export const mixingScenarios: Scenario[] = [
       {
         id: 'vox-5',
         prompt: 'Which of these will best help you make one voice sound like it’s being doubled?',
-        contextKicker: 'Question 5 of 8',
+        contextKicker: 'Question 5 of 7',
         options: [
           { id: 'opt-1', label: 'Vocal Doubler / Microshift Chorus', explanation: 'Correct! A vocal doubler or subtle chorus splits the signal, applies a micro-pitch shift (±5 to 15 cents), and modulates delay time (15–30ms) to simulate two distinct takes singing together.', isCorrect: true, soundDemoType: 'chorus' },
-          { id: 'opt-2', label: 'Shure SM58 Handheld Dynamic Mic', explanation: 'The SM58 is a rugged live dynamic microphone, not a stereo chorus effect.', isCorrect: false },
-          { id: 'opt-3', label: 'Neumann U87 Large Diaphragm Condenser', explanation: 'A U87 captures pristine vocal nuances, but it does not electronically double a single recorded vocal take.', isCorrect: false },
+          { id: 'opt-2', label: 'Handheld Dynamic Vocal Mic', explanation: 'A handheld dynamic vocal mic is rugged for live stage use, not a stereo chorus effect.', isCorrect: false },
+          { id: 'opt-3', label: 'Large Diaphragm Condenser (LDC)', explanation: 'An LDC captures pristine vocal nuances, but it does not electronically double a single recorded vocal take.', isCorrect: false },
           { id: 'opt-4', label: 'SDC Pencil Condenser Mic', explanation: 'A small-diaphragm pencil mic excels at transient response and acoustic instruments, not vocal chorus thickening.', isCorrect: false }
         ]
       },
       {
         id: 'vox-6',
         prompt: 'Which of these will best help you place the vocal in an acoustic space?',
-        contextKicker: 'Question 6 of 8',
+        contextKicker: 'Question 6 of 7',
         options: [
           { id: 'opt-1', label: 'Reverb (Plate / Hall / Room)', explanation: 'Correct! Reverb recreates natural early reflections and diffuse tails of rooms or halls, positioning the voice in 3D depth.', isCorrect: true, soundDemoType: 'reverb' },
           { id: 'opt-2', label: 'Hard Clipper', explanation: 'Clipping squares off peaks to produce harsh distortion.', isCorrect: false },
@@ -82,23 +82,12 @@ export const mixingScenarios: Scenario[] = [
       {
         id: 'vox-7',
         prompt: 'Which of these will best help you give the voice space without washing it out?',
-        contextKicker: 'Question 7 of 8',
+        contextKicker: 'Question 7 of 7',
         options: [
           { id: 'opt-1', label: 'Slapback Delay / Ducked Delay', explanation: 'Correct! A synchronized slapback delay (80–120ms) or ducked delay/reverb stays quiet during words and rises in pauses, maintaining upfront lead clarity.', isCorrect: true, soundDemoType: 'gated' },
           { id: 'opt-2', label: '100% Wet Cathedral Reverb', explanation: 'A 100% wet cathedral reverb completely drowns the vocal into an indistinct washed-out bath.', isCorrect: false },
           { id: 'opt-3', label: 'Bitcrusher', explanation: 'Bitcrushing reduces bit-depth and sample rate for lo-fi aliasing artifacts.', isCorrect: false },
           { id: 'opt-4', label: 'Flanger', explanation: 'A flanger imparts dramatic swishy comb filtering.', isCorrect: false }
-        ]
-      },
-      {
-        id: 'vox-8',
-        prompt: 'Which is the most common polar pattern for a vocal microphone (picks up front, rejects rear)?',
-        contextKicker: 'Question 8 of 8',
-        options: [
-          { id: 'opt-1', label: 'Cardioid Pattern', explanation: 'Correct! Cardioid (heart-shaped) is the industry standard polar pattern, providing maximum sensitivity directly in front (0°) while rejecting 180° rear bleed and room noise.', isCorrect: true },
-          { id: 'opt-2', label: 'Omnidirectional Pattern', explanation: 'Omnidirectional picks up audio equally from all 360 degrees without rejection.', isCorrect: false },
-          { id: 'opt-3', label: 'Figure-8 Bidirectional Pattern', explanation: 'Figure-8 captures audio equally from front and rear while completely rejecting the sides (90° and 270°).', isCorrect: false },
-          { id: 'opt-4', label: 'PZM Boundary Plate', explanation: 'Boundary plates mount flat against walls or floors for acoustic pressure gathering.', isCorrect: false }
         ]
       }
     ]
@@ -177,7 +166,7 @@ export const mixingScenarios: Scenario[] = [
       },
       {
         id: 'eg-6',
-        prompt: 'Which of these stock plugins could add the essential component to the spring-induced surf guitar sound (Dick Dale style)?',
+        prompt: 'Which of these stock plugins could add the essential component to a jangly, wobbly, & ringing guitar sound?',
         contextKicker: 'Question 6 of 6',
         educationalTip: 'Spring reverbs bounce audio through physical coiled springs, yielding that distinctive bouncy, splashy surf rock drip.',
         options: [
@@ -307,24 +296,25 @@ export const mixingScenarios: Scenario[] = [
       },
       {
         id: '808-5',
-        prompt: 'Which of these could widen and expand the sound (while keeping sub frequencies in mono)?',
+        prompt: 'Which of these could widen and expand the sound?',
         contextKicker: 'Question 5 of 6',
         educationalTip: 'Sub frequencies (below 120Hz) must stay centered/mono for punch and vinyl compatibility; widening should only apply to mid/high harmonics.',
         options: [
-          { id: 'opt-1', label: 'Stereo Widener / Chorus on Upper Harmonics only', explanation: 'Correct! Splitting the band and widening only the mid/high frequencies creates a wide 808 while keeping sub-100Hz tight and mono.', isCorrect: true },
+          { id: 'opt-1', label: 'Chorus', explanation: 'Correct! Chorus splits and widens the sound while keeping sub frequencies centered and powerful.', isCorrect: true, soundDemoType: 'chorus' },
           { id: 'opt-2', label: 'Mono Utility', explanation: 'Mono summing collapses all stereo width to the dead center.', isCorrect: false },
           { id: 'opt-3', label: 'Sidechain Compression', explanation: 'Sidechain compression acts on gain, not stereo panning or phase width.', isCorrect: false }
         ]
       },
       {
         id: '808-6',
-        prompt: 'Which of these could carve out room for the synths in the frequency spectrum?',
+        prompt: 'Which of these could carve out room from the 808 sound to make room for the synths in the frequency spectrum?',
         contextKicker: 'Question 6 of 6',
         educationalTip: 'A low-pass filter or high-shelf cut removes unnecessary top end from the 808 so synths and vocals have full clarity in the midrange.',
         options: [
           { id: 'opt-1', label: 'Low-Pass Filter / High-Shelf Cut EQ', explanation: 'Correct! Rolling off frequencies above 2kHz–5kHz clears space for synths, vocal harmonies, and pads.', isCorrect: true, soundDemoType: 'filter' },
           { id: 'opt-2', label: 'Sidechain Compression', explanation: 'Sidechaining controls volume over time rather than removing higher frequency octaves.', isCorrect: false },
-          { id: 'opt-3', label: 'Overdrive', explanation: 'Overdrive adds more frequencies into the synth realm.', isCorrect: false }
+          { id: 'opt-3', label: 'Overdrive', explanation: 'Overdrive adds more frequencies into the synth realm.', isCorrect: false },
+          { id: 'opt-4', label: 'Reverb', explanation: 'Reverb on 808s creates muddy low-end buildup instead of carving out frequency room.', isCorrect: false }
         ]
       }
     ]
@@ -380,7 +370,7 @@ export const mixingScenarios: Scenario[] = [
         contextKicker: 'Question 4 of 6',
         educationalTip: 'Concert Hall reverb models a 1.8–2.5 second acoustic tail with rich spatial dispersion and authentic early reflections.',
         options: [
-          { id: 'opt-1', label: 'Concert Hall Reverb', explanation: 'Correct! Hall reverb simulates a large auditorium or symphony hall with lush, diffuse reflections.', isCorrect: true, soundDemoType: 'reverb' },
+          { id: 'opt-1', label: 'Reverb', explanation: 'Correct! Hall reverb simulates a large auditorium or symphony hall with lush, diffuse reflections.', isCorrect: true, soundDemoType: 'reverb' },
           { id: 'opt-2', label: 'Slapback Delay', explanation: 'Slapback delay gives a rockabilly 100ms echo, not a grand symphonic hall.', isCorrect: false },
           { id: 'opt-3', label: 'Normal Compression', explanation: 'Compression controls dynamic range, not reverberant space.', isCorrect: false }
         ]
@@ -402,7 +392,7 @@ export const mixingScenarios: Scenario[] = [
         contextKicker: 'Question 6 of 6',
         educationalTip: 'Subtle bus compression (2:1 ratio, medium attack, auto release) glues dynamic piano notes so it stays tucked under the vocal.',
         options: [
-          { id: 'opt-1', label: 'Subtle Bus Compression (2:1 or 3:1 Ratio)', explanation: 'Correct! Gentle compression reins in spontaneous loud keystrokes so the piano cradles the vocal consistently.', isCorrect: true, soundDemoType: 'compressor' },
+          { id: 'opt-1', label: 'Compression', explanation: 'Correct! Gentle compression reins in spontaneous loud keystrokes so the piano cradles the vocal consistently.', isCorrect: true, soundDemoType: 'compressor' },
           { id: 'opt-2', label: 'Dynamic EQ', explanation: 'Dynamic EQ addresses narrow frequency anomalies rather than overall mix seating.', isCorrect: false },
           { id: 'opt-3', label: 'Bitcrusher', explanation: 'Bitcrushing would make the piano aggressively harsh and pull attention away from vocals.', isCorrect: false }
         ]
@@ -413,7 +403,7 @@ export const mixingScenarios: Scenario[] = [
     id: 'snare',
     track: 'mixing',
     category: 'instrument',
-    title: 'Snare',
+    title: 'Snare Drum',
     subtitle: '6 Questions · Transient Shaping, Sizzle & 80s Gate',
     description: 'Punch through dense walls of guitars and synths with transient attack, crack, and classic gated ambience.',
     iconName: 'snare-drum',
@@ -427,7 +417,7 @@ export const mixingScenarios: Scenario[] = [
         contextKicker: 'Question 1 of 6',
         educationalTip: 'Transient designers detect the attack curve of an audio waveform and boost or attenuate it independent of track volume.',
         options: [
-          { id: 'opt-1', label: 'Transient Shaper (Attack Boost)', explanation: 'Correct! A transient shaper isolates and amplifies the initial strike/attack without boosting the sustained ring.', isCorrect: true },
+          { id: 'opt-1', label: 'Transient Shaper', explanation: 'Correct! A transient shaper isolates and amplifies the initial strike/attack without boosting the sustained ring.', isCorrect: true },
           { id: 'opt-2', label: 'Reverb', explanation: 'Reverb adds diffuse tail sustain, reducing perceived initial transient punch.', isCorrect: false },
           { id: 'opt-3', label: 'Low Shelf EQ Boost', explanation: 'Boosting low frequencies adds weight or thud, not sharp transient snap.', isCorrect: false },
           { id: 'opt-4', label: 'Chorus', explanation: 'Chorus smears drum transients by adding detuned copies.', isCorrect: false }
@@ -440,7 +430,7 @@ export const mixingScenarios: Scenario[] = [
         educationalTip: 'Snare sizzle lives between 4kHz–7kHz. A dynamic EQ attenuates this frequency band only during hard hits.',
         options: [
           { id: 'opt-1', label: 'Dynamic EQ (4kHz - 7kHz dip)', explanation: 'Correct! Dynamic EQ automatically tames harsh high-frequency wire sizzle on hard hits while leaving quiet ghost notes alone.', isCorrect: true, soundDemoType: 'filter' },
-          { id: 'opt-2', label: 'Static Boost EQ', explanation: 'Boosting will make the harsh sizzle even more unbearable.', isCorrect: false },
+          { id: 'opt-2', label: 'Low End EQ Boost', explanation: 'Boosting will make the harsh sizzle even more unbearable.', isCorrect: false },
           { id: 'opt-3', label: 'Delay', explanation: 'Delay will echo the painful sizzle across multiple repetitions.', isCorrect: false },
           { id: 'opt-4', label: 'Limiter', explanation: 'A limiter will squash the entire drum rather than targeting specific wire frequencies.', isCorrect: false }
         ]
@@ -475,7 +465,7 @@ export const mixingScenarios: Scenario[] = [
         contextKicker: 'Question 5 of 6',
         educationalTip: 'Pitch-shifting upward (+200 to +400 cents) raises fundamental body pitch while shortening decay with an envelope shaper.',
         options: [
-          { id: 'opt-1', label: 'Pitch Shifter (+cents upward) & Envelope Shortener', explanation: 'Correct! Pitching the snare up and tightening its release envelope transforms a loose vintage snare into a modern snappy trap crack.', isCorrect: true },
+          { id: 'opt-1', label: 'Raising the pitch of the sample/software instrument', explanation: 'Correct! Pitching the snare up and tightening its release envelope transforms a loose vintage snare into a modern snappy trap crack.', isCorrect: true },
           { id: 'opt-2', label: 'Long Cathedral Reverb', explanation: 'Long reverb makes the snare huge and loose, the opposite of tight trap snare.', isCorrect: false },
           { id: 'opt-3', label: 'Stereo Chorus', explanation: 'Chorus widens and softens impact, reducing trap bite.', isCorrect: false },
           { id: 'opt-4', label: 'Sub-Bass Boost', explanation: 'Sub-bass boost makes the snare deeper and tubbier.', isCorrect: false }
@@ -499,7 +489,7 @@ export const mixingScenarios: Scenario[] = [
     id: 'kick',
     track: 'mixing',
     category: 'instrument',
-    title: 'Kick',
+    title: 'Kick Drum/Bass Drum',
     subtitle: '6 Questions · Click Attenuation, Low-End Headroom & Mud',
     description: 'Balance 50Hz sub thump with 3kHz beater click, clear room for the 808, and eliminate boxy mud.',
     iconName: 'kick-drum',
@@ -513,7 +503,7 @@ export const mixingScenarios: Scenario[] = [
         contextKicker: 'Question 1 of 6',
         educationalTip: 'Beater click lives around 3kHz to 5kHz. An EQ cut or transient shaper softening attack removes plastic clickiness.',
         options: [
-          { id: 'opt-1', label: 'Parametric EQ Cut (3kHz - 5kHz) or Transient Shaper (Attenuate Attack)', explanation: 'Correct! Dipping the 3k–5kHz beater zone or softening transient attack turns plastic click into round thump.', isCorrect: true, soundDemoType: 'filter' },
+          { id: 'opt-1', label: 'EQ Cut (3kHz-5kHz)', explanation: 'Correct! Dipping the 3k–5kHz beater zone or softening transient attack turns plastic click into round thump.', isCorrect: true, soundDemoType: 'filter' },
           { id: 'opt-2', label: 'Sidechain Compression', explanation: 'Sidechain compression ducks other tracks when the kick plays, but doesn’t change the kick’s own click.', isCorrect: false },
           { id: 'opt-3', label: 'Stereo Widener', explanation: 'Stereo widening sub audio ruins mono compatibility and punch.', isCorrect: false }
         ]
@@ -525,17 +515,17 @@ export const mixingScenarios: Scenario[] = [
         educationalTip: 'Long reverberation tails in the sub-100Hz register quickly build into muddy acoustic slop that ruins the mix punch.',
         options: [
           { id: 'opt-1', label: 'Long Decay Reverb', explanation: 'Correct! Over-reverberating a kick fills headroom with low-frequency rumble and washes out punch.', isCorrect: true },
-          { id: 'opt-2', label: 'High-Pass Filter at 30 Hz', explanation: 'A 30Hz high-pass filter is actually standard practice to remove inaudible sub-sonic speaker strain.', isCorrect: false },
+          { id: 'opt-2', label: 'High Pass Filter at 80Hz', explanation: 'A high-pass filter is standard practice to remove inaudible sub-sonic speaker strain.', isCorrect: false },
           { id: 'opt-3', label: 'Accurate Metering', explanation: 'Accurate metering is essential and safe.', isCorrect: false }
         ]
       },
       {
         id: 'k-3',
-        prompt: 'Which other plugin might you be cautious over-using on a kick?',
+        prompt: 'Which common mixing tool do you generally want to avoid when mixing kick/bass drum?',
         contextKicker: 'Question 3 of 6',
-        educationalTip: 'Stereo wideners introduce phase cancellation. If the kick is spread wide, summing to mono (like club systems or phones) can make the bass vanish.',
+        educationalTip: 'Panning a kick drum off-center will make it lose its power and feel disorienting to the listener.',
         options: [
-          { id: 'opt-1', label: 'Stereo Widener / Chorus (Phase cancelation hazard)', explanation: 'Correct! Kick fundamentals must stay centered in mono; widening causes devastating mono phase cancellation on club sound systems.', isCorrect: true },
+          { id: 'opt-1', label: 'Panning', explanation: 'Correct! Panning a kick drum will make it lose its power and feel disorienting to the listener.', isCorrect: true },
           { id: 'opt-2', label: 'Subtle Parametric EQ', explanation: 'Parametric EQ is standard for sculpting kick drums.', isCorrect: false },
           { id: 'opt-3', label: 'Clip Meter', explanation: 'Clip meters are visual monitoring tools.', isCorrect: false }
         ]
@@ -593,7 +583,7 @@ export const mixingScenarios: Scenario[] = [
         contextKicker: 'Question 1 of 6',
         educationalTip: 'Room mics capture traffic, AC hum, and footstep rumble below 80Hz. A steep high-pass filter eliminates this.',
         options: [
-          { id: 'opt-1', label: 'High-Pass Filter (Low Cut at 80 Hz)', explanation: 'Correct! Rolling off everything below 80Hz cleans up air conditioner rumble and street noise.', isCorrect: true, soundDemoType: 'filter' },
+          { id: 'opt-1', label: 'High-Pass Filter', explanation: 'Correct! Rolling off everything below 80Hz cleans up air conditioner rumble and street noise.', isCorrect: true, soundDemoType: 'filter' },
           { id: 'opt-2', label: 'Dynamic EQ', explanation: 'Dynamic EQ is an active filter, but a high-pass filter provides complete sub-bass elimination.', isCorrect: false },
           { id: 'opt-3', label: 'Tape Saturation', explanation: 'Saturation will thicken and distort the rumble, making it worse.', isCorrect: false }
         ]
@@ -637,19 +627,19 @@ export const mixingScenarios: Scenario[] = [
         contextKicker: 'Question 5 of 6',
         educationalTip: 'The famous "All-Buttons-In" 1176 FET compressor setting squashes room audio with extreme ratio and distortion, making drums sound gigantic.',
         options: [
-          { id: 'opt-1', label: 'All-Buttons-In / 1176-style Heavy FET Compression', explanation: 'Correct! Slamming a room mic with extreme compression brings up quiet room resonance and creates an explosive sonic wall.', isCorrect: true, soundDemoType: 'compressor' },
-          { id: 'opt-2', label: 'Subtle Master Limiter', explanation: 'A transparent master limiter avoids audible distortion and breathing.', isCorrect: false },
+          { id: 'opt-1', label: 'Heavy Compression', explanation: 'Correct! Slamming a room mic with heavy compression brings up quiet room resonance and creates an explosive sonic wall.', isCorrect: true, soundDemoType: 'compressor' },
+          { id: 'opt-2', label: 'Pan Wide Left', explanation: 'Panning left places sound on the left side, not creating a wall of sound.', isCorrect: false },
           { id: 'opt-3', label: 'Noise Gate', explanation: 'A noise gate eliminates the room decay that forms the wall of sound.', isCorrect: false }
         ]
       },
       {
         id: 'rm-6',
-        prompt: 'Which of these could change or re-shape the original room from the recording into an entirely different room?',
+        prompt: 'Which of these could expand the sound of the original room further?',
         contextKicker: 'Question 6 of 6',
-        educationalTip: 'Convolution reverbs load impulse response (IR) samples of real physical chambers, concert halls, and cathedrals.',
+        educationalTip: 'Reverb expands ambient space and adds size to room recordings.',
         options: [
-          { id: 'opt-1', label: 'Convolution Reverb (with Impulse Response)', explanation: 'Correct! Convolution reverb applies real-world acoustic profiles to replace or transform the physical space.', isCorrect: true, soundDemoType: 'reverb' },
-          { id: 'opt-2', label: 'Tremolo', explanation: 'Tremolo modulates volume in waves, not acoustic chamber geometry.', isCorrect: false },
+          { id: 'opt-1', label: 'Reverb', explanation: 'Correct! Reverb expands the acoustic ambience and size of the original room further.', isCorrect: true, soundDemoType: 'reverb' },
+          { id: 'opt-2', label: 'Tremolo', explanation: 'Tremolo modulates volume in waves, not acoustic chamber size.', isCorrect: false },
           { id: 'opt-3', label: 'Bitcrusher', explanation: 'Bitcrusher reduces digital resolution.', isCorrect: false }
         ]
       }
@@ -673,7 +663,7 @@ export const mixingScenarios: Scenario[] = [
         contextKicker: 'Question 1 of 4',
         educationalTip: 'A High-Pass Filter (also called Low Cut) attenuates everything below a chosen frequency (e.g., 80Hz–100Hz).',
         options: [
-          { id: 'opt-1', label: 'High-Pass Filter (Low Cut Curve)', explanation: 'Correct! A high-pass filter blocks low frequency thumps and mic stand rumbles while passing all audio above.', isCorrect: true, soundDemoType: 'filter' },
+          { id: 'opt-1', label: 'High-Pass Filter', explanation: 'Correct! A high-pass filter blocks low frequency thumps and mic stand rumbles while passing all audio above.', isCorrect: true, soundDemoType: 'filter' },
           { id: 'opt-2', label: 'High Shelf Boost', explanation: 'A high shelf boosts high treble, ignoring low-frequency rumble.', isCorrect: false },
           { id: 'opt-3', label: 'Low Shelf Boost', explanation: 'Boosting low shelf would dramatically worsen plosive pops!', isCorrect: false },
           { id: 'opt-4', label: 'Narrow Notch at 1kHz', explanation: 'Notching 1kHz addresses midrange nasal tone, not low rumble.', isCorrect: false }
@@ -707,7 +697,7 @@ export const mixingScenarios: Scenario[] = [
         contextKicker: 'Question 4 of 4',
         educationalTip: 'A gentle High-Shelf Boost above 10kHz–12kHz adds high-frequency sheen and breath ("air") without introducing harshness.',
         options: [
-          { id: 'opt-1', label: 'High-Shelf Boost (+2dB to +3dB above 10kHz–12kHz)', explanation: 'Correct! An air band high shelf opens up top-end clarity and expensive sheen on modern vocals.', isCorrect: true, soundDemoType: 'filter' },
+          { id: 'opt-1', label: 'High-Shelf Boost', explanation: 'Correct! An air band high shelf opens up top-end clarity and expensive sheen on modern vocals.', isCorrect: true, soundDemoType: 'filter' },
           { id: 'opt-2', label: 'Low Cut at 500 Hz', explanation: 'Cutting at 500Hz empties out the vocal body, making it sound thin and tinny.', isCorrect: false },
           { id: 'opt-3', label: 'Mid Bell Boost at 1kHz', explanation: 'Boosting 1kHz adds harsh telephone honk rather than silky air.', isCorrect: false }
         ]
@@ -754,9 +744,9 @@ export const mixingScenarios: Scenario[] = [
         contextKicker: 'Question 3 of 6',
         educationalTip: 'Mix bus glue requires gentle ratios (1.5:1 or 2:1), slow attack (30ms) to preserve drum transients, and auto/smooth release.',
         options: [
-          { id: 'opt-1', label: 'Gentle Ratio (1.5:1 to 2:1), Slow Attack (30ms), Auto Release with 1–2dB Gain Reduction', explanation: 'Correct! Gentle settings glue disparate instruments together into a cohesive record without squashing punch.', isCorrect: true },
+          { id: 'opt-1', label: 'Gentle Ratio (~2:1), Slow Attack, 1-3 dB of Gain Reduction', explanation: 'Correct! Gentle settings glue disparate instruments together into a cohesive record without squashing punch.', isCorrect: true },
           { id: 'opt-2', label: '20:1 Brickwall Ratio, 0.1ms Attack', explanation: 'An aggressive brickwall setting will destroy all groove, dynamic contrast, and life in the mix.', isCorrect: false },
-          { id: 'opt-3', label: 'Hard Expander', explanation: 'An expander increases dynamic range rather than gluing.', isCorrect: false }
+          { id: 'opt-3', label: 'Noise Gate', explanation: 'A noise gate mutes quiet signals, not gluing mix buses.', isCorrect: false }
         ]
       },
       {
@@ -783,7 +773,7 @@ export const mixingScenarios: Scenario[] = [
       },
       {
         id: 'comp-6',
-        prompt: 'Which technique would involve layering multiple compressors together in series to create smooth and natural sounding compression?',
+        prompt: 'Which technique would involve layering multiple compressors together one after the other to create smooth and natural sounding compression?',
         contextKicker: 'Question 6 of 6',
         educationalTip: 'Serial compression uses 2 or 3 compressors each doing 1–2dB of reduction (e.g. fast 1176 catching peaks followed by slow LA-2A smoothing body).',
         options: [
@@ -799,7 +789,7 @@ export const mixingScenarios: Scenario[] = [
     track: 'mixing',
     category: 'mix-element',
     title: 'Reverbs',
-    subtitle: '6 Questions · Gated, Room, Plate, Spring & Hall',
+    subtitle: '7 Questions · Gated, Room, Plate, Spring & Hall',
     description: 'Explore acoustic chambers, mechanical plates, spring reverb tanks, and classic 80s gated reverb.',
     iconName: 'reverb',
     accentColor: 'teal',
@@ -809,7 +799,7 @@ export const mixingScenarios: Scenario[] = [
       {
         id: 'rev-1',
         prompt: 'Which of these will achieve the stereotypically 80s-sounding non-linear reverb?',
-        contextKicker: 'Question 1 of 6',
+        contextKicker: 'Question 1 of 7',
         educationalTip: 'Gated Reverb cuts off abruptly before naturally decaying, popularized on 80s drums by artists like Genesis and Prince.',
         options: [
           { id: 'opt-1', label: 'Gated Reverb', explanation: 'Correct! A lush reverb tail abruptly severed by a noise gate created the iconic punchy 80s drum sound.', isCorrect: true, soundDemoType: 'gated' },
@@ -821,7 +811,7 @@ export const mixingScenarios: Scenario[] = [
       {
         id: 'rev-2',
         prompt: 'Which of these will be the best to glue instruments together in a warm small space while not adding too much expansiveness to the mix?',
-        contextKicker: 'Question 2 of 6',
+        contextKicker: 'Question 2 of 7',
         educationalTip: 'Small Room Reverb (0.4s–0.9s decay) gives direct instruments cohesive acoustic reflections without pushing them into the background.',
         options: [
           { id: 'opt-1', label: 'Room Reverb', explanation: 'Correct! Room reverb provides early reflections that make studio recordings feel like they were performed together in one room.', isCorrect: true, soundDemoType: 'reverb' },
@@ -833,7 +823,7 @@ export const mixingScenarios: Scenario[] = [
       {
         id: 'rev-3',
         prompt: 'Which of these will shimmer in an unnatural but pleasing way, especially nice on vocals?',
-        contextKicker: 'Question 3 of 6',
+        contextKicker: 'Question 3 of 7',
         educationalTip: 'Plate Reverbs (such as the EMT 140) use a suspended steel plate with electromagnetic transducers for bright, shimmering density.',
         options: [
           { id: 'opt-1', label: 'Plate Reverb', explanation: 'Correct! Plate reverbs have a dense, bright diffusion that sits beautifully on vocals and strings.', isCorrect: true, soundDemoType: 'reverb' },
@@ -844,7 +834,7 @@ export const mixingScenarios: Scenario[] = [
       {
         id: 'rev-4',
         prompt: 'Which of these started as an effect built into guitar amps, creating a quick ringing vibration?',
-        contextKicker: 'Question 4 of 6',
+        contextKicker: 'Question 4 of 7',
         educationalTip: 'Spring reverbs send audio through physical steel springs inside guitar amplifiers (like Fender Twin Reverbs).',
         options: [
           { id: 'opt-1', label: 'Spring Reverb', explanation: 'Correct! Spring reverbs mechanically bounce audio vibrations through helical springs.', isCorrect: true, soundDemoType: 'reverb' },
@@ -855,18 +845,29 @@ export const mixingScenarios: Scenario[] = [
       {
         id: 'rev-5',
         prompt: 'Which of these could take out muddiness from a reverb bus if there isn’t a filter on the plugin?',
-        contextKicker: 'Question 5 of 6',
-        educationalTip: 'The "Abbey Road Reverb Trick" inserts an EQ before/after the reverb, high-passing below 500Hz and low-passing above 6kHz.',
+        contextKicker: 'Question 5 of 7',
+        educationalTip: 'A high-pass filter cuts out low-frequency mud from cluttering the reverb return.',
         options: [
-          { id: 'opt-1', label: 'Parametric EQ (High-Pass at 500Hz & Low-Pass at 6kHz on the Reverb Aux Bus)', explanation: 'Correct! Filtering low rumble and harsh top sizzle before/after reverb (Abbey Road trick) keeps mixes clean and pristine.', isCorrect: true, soundDemoType: 'filter' },
+          { id: 'opt-1', label: 'High-Pass Filter', explanation: 'Correct! Filtering low rumble before/after reverb keeps mixes clean and pristine.', isCorrect: true, soundDemoType: 'filter' },
           { id: 'opt-2', label: 'Chorus Plugin', explanation: 'A chorus plugin will thicken the mud even further.', isCorrect: false },
           { id: 'opt-3', label: 'Bitcrusher', explanation: 'Bitcrushing adds digital hash and noise to the reverb.', isCorrect: false }
         ]
       },
       {
         id: 'rev-6',
+        prompt: 'Other than a De-Esser, what technique could tame harsh Ss and transients that can be overly exaggerated by a reverb?',
+        contextKicker: 'Question 6 of 7',
+        educationalTip: 'A high-shelf cut tames bright high-frequency sibilance and harshness that gets artificially boosted by reverb tails.',
+        options: [
+          { id: 'opt-1', label: 'High-Shelf Cut', explanation: 'Correct! A high-shelf cut gently reduces high-frequency harshness and sibilance exaggerated by reverb reflections.', isCorrect: true, soundDemoType: 'filter' },
+          { id: 'opt-2', label: 'Low-Shelf Boost', explanation: 'Boosting low frequencies adds mud instead of taming high sibilance.', isCorrect: false },
+          { id: 'opt-3', label: 'High-Pass Filter', explanation: 'A high-pass filter removes low rumble, not high-frequency sibilance.', isCorrect: false }
+        ]
+      },
+      {
+        id: 'rev-7',
         prompt: 'Which of these could re-create a larger natural space like a cathedral, room, or concert hall?',
-        contextKicker: 'Question 6 of 6',
+        contextKicker: 'Question 7 of 7',
         educationalTip: 'Hall Reverb and Convolution Reverbs sample or calculate physical multi-second acoustic decay envelopes.',
         options: [
           { id: 'opt-1', label: 'Hall Reverb / Convolution Reverb', explanation: 'Correct! Hall and Convolution reverbs simulate authentic large-scale physical architecture with expansive decay tails.', isCorrect: true, soundDemoType: 'reverb' },
@@ -935,11 +936,11 @@ export const mixingScenarios: Scenario[] = [
       },
       {
         id: 'dm-5',
-        prompt: 'Which sweeping effect is a big part of many funk guitarists’ sound?',
+        prompt: 'Which frequency-sweeping effect is a big part of many funk guitarists’ sound?',
         contextKicker: 'Question 5 of 6',
         educationalTip: 'Envelope filters (Auto-Wah) and Phasers create sweeping resonant filter peaks responsive to pick attack.',
         options: [
-          { id: 'opt-1', label: 'Envelope Filter / Auto-Wah / Phaser', explanation: 'Correct! Envelope filters sweep resonant filter peaks with strumming dynamics, iconic in funk guitar.', isCorrect: true, soundDemoType: 'filter' },
+          { id: 'opt-1', label: 'Wah/Envelope Filter', explanation: 'Correct! Envelope filters sweep resonant filter peaks with strumming dynamics, iconic in funk guitar.', isCorrect: true, soundDemoType: 'filter' },
           { id: 'opt-2', label: 'Hard Limiter', explanation: 'A limiter chops off volume peaks without filter sweeps.', isCorrect: false },
           { id: 'opt-3', label: 'Gated Reverb', explanation: 'Gated reverb is an 80s drum effect.', isCorrect: false }
         ]

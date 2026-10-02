@@ -22,6 +22,7 @@ export default function App() {
   );
   const [isSchematicsModalOpen, setIsSchematicsModalOpen] = useState(false);
   const [inspectedEffect, setInspectedEffect] = useState<AudioEffectType | null>(null);
+  const [adventureResetKey, setAdventureResetKey] = useState(0);
 
   const handleOpenSchematics = (effect?: AudioEffectType) => {
     setInspectedEffect(effect || null);
@@ -30,6 +31,13 @@ export default function App() {
 
   const handleCloseSchematics = () => {
     setIsSchematicsModalOpen(false);
+  };
+
+  const handleReturnToChallengeMenu = () => {
+    localStorage.removeItem('aq_active_adventure');
+    setIsSchematicsModalOpen(false);
+    setActiveTab('adventure');
+    setAdventureResetKey((prev) => prev + 1);
   };
 
   const handleSessionCompleted = (session: StudentSession) => {
@@ -58,12 +66,15 @@ export default function App() {
         setIsMuted={setIsMuted}
         onOpenSchematics={() => handleOpenSchematics()}
         isSchematicsOpen={isSchematicsModalOpen}
+        onReturnToChallengeMenu={handleReturnToChallengeMenu}
       />
 
       {/* Main View Area */}
       <main className="flex-1 pb-16">
         {activeTab === 'adventure' && (
           <StudentAdventure
+            key={adventureResetKey}
+            resetTrigger={adventureResetKey}
             onSessionCompleted={handleSessionCompleted}
             onPortfolioUpdated={handlePortfolioUpdated}
             onViewGradeReport={handleViewGradeReport}

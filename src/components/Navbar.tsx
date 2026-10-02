@@ -12,6 +12,7 @@ interface NavbarProps {
   setIsMuted: (muted: boolean) => void;
   onOpenSchematics?: () => void;
   isSchematicsOpen?: boolean;
+  onReturnToChallengeMenu?: () => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -21,6 +22,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   setIsMuted,
   onOpenSchematics,
   isSchematicsOpen = false,
+  onReturnToChallengeMenu,
 }) => {
   const toggleMute = () => {
     const nextMuted = !isMuted;
@@ -32,12 +34,20 @@ export const Navbar: React.FC<NavbarProps> = ({
   const isGradeReportActive = activeTab === 'grade-report' && !isSchematicsOpen;
   const isEffectsGearActive = isSchematicsOpen;
 
+  const handleAdventureClick = () => {
+    if (onReturnToChallengeMenu) {
+      onReturnToChallengeMenu();
+    } else {
+      setActiveTab('adventure');
+    }
+  };
+
   return (
-    <header className="sticky top-0 z-40 bg-slate-950/98 backdrop-blur-lg border-b border-slate-800 px-4 sm:px-6 py-3">
-      <div className="max-w-7xl mx-auto flex items-center justify-between gap-3">
+    <header className="relative sm:sticky top-0 z-40 bg-slate-950/98 backdrop-blur-lg border-b border-slate-800 px-4 sm:px-6 py-3">
+      <div className="max-w-7xl mx-auto flex flex-wrap sm:flex-nowrap items-center justify-between gap-3">
         {/* Zone 1: Single text element wordmark */}
         <button
-          onClick={() => setActiveTab('adventure')}
+          onClick={handleAdventureClick}
           className="text-lg font-bold tracking-tight text-white hover:text-emerald-400 transition-colors flex items-center gap-2 whitespace-nowrap cursor-pointer"
         >
           <Headphones className="w-5 h-5 text-emerald-400" />
@@ -45,17 +55,17 @@ export const Navbar: React.FC<NavbarProps> = ({
         </button>
 
         {/* Zone 2: Navigation Links (Green for Adventure, Red for Grade Report, Blue for Effects & Gear) */}
-        <nav className="flex items-center gap-1.5 md:gap-3 text-xs md:text-sm font-medium">
+        <nav className="flex flex-wrap sm:flex-nowrap items-center justify-center sm:justify-end gap-1.5 md:gap-3 text-xs md:text-sm font-medium w-full sm:w-auto">
           {/* TAB 1: ADVENTURE (GREEN) */}
           <button
-            onClick={() => setActiveTab('adventure')}
+            onClick={handleAdventureClick}
             className={`px-3 sm:px-4 py-2 rounded-lg transition-all duration-200 whitespace-nowrap font-semibold cursor-pointer ${
               isAdventureActive
                 ? 'bg-emerald-600 hover:bg-emerald-500 text-white border border-emerald-400 shadow-md shadow-emerald-950/50'
                 : 'text-slate-400 hover:text-emerald-300 hover:bg-emerald-950/30 border border-transparent'
             }`}
           >
-            Choose-Your-Own Adventure
+            Choose-Your-Own-Adventure
           </button>
 
           {/* TAB 2: GRADE REPORT (RED) */}

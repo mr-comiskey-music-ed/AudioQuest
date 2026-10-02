@@ -40,8 +40,21 @@ export function saveCompletedScenario(
   const overallTotalQuestions = scenarios.reduce((acc, s) => acc + s.totalQuestions, 0);
   const overallTotalAttempts = scenarios.reduce((acc, s) => acc + s.totalAttempts, 0);
   const overallTimeSpentSeconds = scenarios.reduce((acc, s) => acc + s.timeSpentSeconds, 0);
+  const totalEarnedPoints = scenarios.reduce((acc, s) => {
+    if (s.logs && s.logs.length > 0) {
+      return (
+        acc +
+        s.logs.reduce((logAcc, l) => {
+          if (l.attempts.length === 1) return logAcc + 1.0;
+          if (l.attempts.length === 2) return logAcc + 0.5;
+          return logAcc + 0.0;
+        }, 0)
+      );
+    }
+    return acc + (s.scorePercentage / 100) * s.totalQuestions;
+  }, 0);
   const overallScorePercentage =
-    overallTotalQuestions > 0 ? Math.round((overallFirstTryCount / overallTotalQuestions) * 100) : 0;
+    overallTotalQuestions > 0 ? Math.round((totalEarnedPoints / overallTotalQuestions) * 100) : 0;
 
   const basePortfolio: Omit<StudentPortfolio, 'verificationHash'> = {
     studentName: studentName.trim() || existing?.studentName || 'Anonymous Student',

@@ -91,10 +91,10 @@ const ACHIEVEMENT_BADGES: AchievementBadge[] = [
     icon: <Trophy className="w-5 h-5" />,
   },
   {
-    id: 'badge-14',
-    milestone: 14,
+    id: 'badge-18',
+    milestone: 18,
     title: 'Master Engineer',
-    description: 'Complete all 14 studio challenges',
+    description: 'Complete all 18 studio challenges',
     icon: <Crown className="w-5 h-5" />,
   },
 ];
@@ -119,6 +119,7 @@ interface StudentAdventureProps {
   onPortfolioUpdated?: (portfolio: StudentPortfolio) => void;
   onViewGradeReport?: () => void;
   onOpenSchematics?: (effect?: AudioEffectType) => void;
+  resetTrigger?: number;
 }
 
 export const StudentAdventure: React.FC<StudentAdventureProps> = ({
@@ -126,6 +127,7 @@ export const StudentAdventure: React.FC<StudentAdventureProps> = ({
   onPortfolioUpdated,
   onViewGradeReport,
   onOpenSchematics,
+  resetTrigger,
 }) => {
   // Student Portfolio across all challenges
   const [portfolio, setPortfolio] = useState<StudentPortfolio | null>(() =>
@@ -200,6 +202,16 @@ export const StudentAdventure: React.FC<StudentAdventureProps> = ({
     return [];
   });
 
+  const [playingDemoKey, setPlayingDemoKey] = useState<string | null>(null);
+
+  const handlePlayDemo = (demoKey: string) => {
+    soundEngine.playConceptDemo(demoKey);
+    setPlayingDemoKey(demoKey);
+    setTimeout(() => {
+      setPlayingDemoKey((current) => (current === demoKey ? null : current));
+    }, 1200);
+  };
+
   const [logs, setLogs] = useState<QuestionAttemptLog[]>(() => {
     const saved = localStorage.getItem('aq_active_adventure');
     if (saved) {
@@ -232,6 +244,19 @@ export const StudentAdventure: React.FC<StudentAdventureProps> = ({
     }
     return false;
   });
+
+  useEffect(() => {
+    if (resetTrigger !== undefined && resetTrigger > 0) {
+      localStorage.removeItem('aq_active_adventure');
+      setActiveScenario(null);
+      setIsCompleted(false);
+      setQuestionIndex(0);
+      setSelectedOptionId(null);
+      setFeedbackState('idle');
+      setCurrentAttempts([]);
+      setLogs([]);
+    }
+  }, [resetTrigger]);
 
   // Auto-save active adventure progress to localStorage on any state change
   useEffect(() => {
@@ -318,11 +343,6 @@ export const StudentAdventure: React.FC<StudentAdventureProps> = ({
 
       const updatedLogs = [...logs, logEntry];
       setLogs(updatedLogs);
-
-      // Check if this was the last question
-      if (activeScenario && questionIndex === activeScenario.questions.length - 1) {
-        completeAdventure(updatedLogs);
-      }
     } else {
       setFeedbackState('incorrect');
       soundEngine.playIncorrect();
@@ -355,7 +375,12 @@ export const StudentAdventure: React.FC<StudentAdventureProps> = ({
     const timeSpent = Math.round((Date.now() - startTime) / 1000);
     const totalQuestions = activeScenario.questions.length;
     const firstTryCount = finalLogs.filter((l) => l.wasFirstTry).length;
-    const score = Math.round((firstTryCount / totalQuestions) * 100);
+    const totalPoints = finalLogs.reduce((acc, log) => {
+      if (log.attempts.length === 1) return acc + 1.0;
+      if (log.attempts.length === 2) return acc + 0.5;
+      return acc + 0.0;
+    }, 0);
+    const score = Math.round((totalPoints / totalQuestions) * 100);
 
     const scenarioRecord: CompletedScenarioRecord = {
       scenarioId: activeScenario.id,
@@ -405,7 +430,7 @@ export const StudentAdventure: React.FC<StudentAdventureProps> = ({
     const isInstrumentChallenge =
       activeScenario.iconName &&
       (AUDIO_EFFECT_ICONS[activeScenario.iconName as AudioEffectType]?.category === 'instruments' ||
-        ['kick-drum', 'snare-drum', 'drum-set', 'electric-guitar', 'acoustic-guitar', 'bass-guitar', 'piano'].includes(activeScenario.iconName));
+        ['kick-drum', 'snare-drum', 'drum-set', 'electric-guitar', 'acoustic-guitar', 'bass-guitar', 'piano', 'acoustic-piano'].includes(activeScenario.iconName));
 
     if (isInstrumentChallenge) {
       setTimeout(() => {
@@ -417,18 +442,14 @@ export const StudentAdventure: React.FC<StudentAdventureProps> = ({
   // 1. CHALLENGE SELECTION SCREEN
   if (!activeScenario) {
     return (
-      <div className="max-w-6xl mx-auto px-4 py-8 space-y-8">
+      <div className="max-w-6xl mx-auto px-4 py-4 sm:py-6 space-y-4 sm:space-y-5">
         {/* Welcome & Overview Banner */}
-        <div className="p-6 md:p-8 bg-slate-900/80 border border-slate-800 rounded-2xl relative overflow-hidden">
-          <div className="relative z-10 space-y-2">
-            <div className="flex items-center gap-2 text-amber-400 text-xs font-mono tracking-wider uppercase">
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>Interactive Audio Engineering Simulator</span>
-            </div>
-            <h1 className="text-2xl md:text-3xl font-bold text-white tracking-tight">
+        <div className="p-4 sm:p-5 bg-slate-900/80 border border-slate-800 rounded-2xl relative overflow-hidden">
+          <div className="relative z-10 space-y-1.5">
+            <h1 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
               AudioQuest Studio Adventures
             </h1>
-            <p className="text-sm text-slate-300 max-w-2xl leading-relaxed">
+            <p className="text-xs sm:text-sm text-slate-300 max-w-none leading-relaxed">
               Step into the producer's chair. Diagnose real-world acoustic, tracking, and mixing challenges across professional studio instruments. Your progress is auto-saved as you go.
             </p>
           </div>
@@ -454,7 +475,7 @@ export const StudentAdventure: React.FC<StudentAdventureProps> = ({
                   <span className="font-semibold text-amber-400 font-mono">
                     {portfolio?.totalScenariosCompleted || 0}
                   </span>{' '}
-                  of 13 Challenges Mastered · Cumulative Grade:{' '}
+                  of 18 Challenges Completed · Cumulative Grade:{' '}
                   <span className="font-semibold text-emerald-400 font-mono">
                     {portfolio?.overallScorePercentage || 0}%
                   </span>{' '}
@@ -505,52 +526,47 @@ export const StudentAdventure: React.FC<StudentAdventureProps> = ({
         </div>
 
         {/* HIGH-VISIBILITY SUB-TABS: "MIXING" & "RECORDING" */}
-        <div className="space-y-4">
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
-            <div className="text-xs font-mono uppercase tracking-widest text-slate-400 font-semibold">
-              Select Studio Discipline:
-            </div>
-            <div className="text-xs text-slate-400 hidden sm:block">
-              {currentScenarios.length} Challenges Available in this deck
-            </div>
+        <div className="space-y-3">
+          <div className="text-xs font-mono uppercase tracking-widest text-slate-400 font-semibold">
+            Select Engineering Discipline:
           </div>
 
           <div className="grid grid-cols-2 gap-3 p-1.5 bg-slate-900/90 border-2 border-slate-800 rounded-2xl shadow-xl">
             {/* SUB-TAB 1: MIXING */}
             <button
               onClick={() => setSelectedTrack('mixing')}
-              className={`py-4 px-4 sm:px-6 rounded-xl transition-all duration-200 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 text-center sm:text-left cursor-pointer ${
+              className={`py-3.5 px-3 sm:px-6 rounded-xl transition-all duration-200 flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4 text-center sm:text-left cursor-pointer ${
                 selectedTrack === 'mixing'
                   ? 'bg-amber-400 text-slate-950 shadow-lg shadow-amber-400/20 font-bold scale-[1.01]'
                   : 'text-slate-400 hover:text-white hover:bg-slate-800/80 font-medium'
               }`}
             >
               <div
-                className={`w-10 h-10 rounded-lg flex items-center justify-center shrink-0 transition-colors ${
+                className={`w-9 h-9 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center shrink-0 transition-colors ${
                   selectedTrack === 'mixing'
                     ? 'bg-slate-950 text-amber-400'
                     : 'bg-slate-800 text-slate-400'
                 }`}
               >
-                <Sliders className="w-5 h-5 stroke-[2.5]" />
+                <Sliders className="w-4 h-4 sm:w-5 sm:h-5 stroke-[2.5]" />
               </div>
               <div className="space-y-0.5">
                 <div className="flex items-center justify-center sm:justify-start gap-2">
-                  <span className="text-base sm:text-lg font-black tracking-wider uppercase">
+                  <span className="text-sm sm:text-lg font-black tracking-wider uppercase">
                     MIXING
                   </span>
                   <span
-                    className={`text-[10px] font-mono px-2 py-0.5 rounded font-bold uppercase ${
+                    className={`text-[10px] font-mono px-2 py-0.5 rounded font-bold uppercase hidden sm:inline-block ${
                       selectedTrack === 'mixing'
                         ? 'bg-slate-950/20 text-slate-950 border border-slate-950/30'
                         : 'bg-slate-800 text-slate-400 border border-slate-700'
                     }`}
                   >
-                    8 Challenges
+                    12 Challenges
                   </span>
                 </div>
                 <div
-                  className={`text-[11px] leading-tight hidden md:flex items-center gap-1.5 flex-wrap pt-0.5 ${
+                  className={`text-[11px] leading-tight hidden sm:flex items-center gap-1.5 flex-wrap pt-0.5 ${
                     selectedTrack === 'mixing' ? 'text-slate-900 font-medium' : 'text-slate-500'
                   }`}
                 >
@@ -576,38 +592,38 @@ export const StudentAdventure: React.FC<StudentAdventureProps> = ({
             {/* SUB-TAB 2: RECORDING */}
             <button
               onClick={() => setSelectedTrack('recording')}
-              className={`py-4 px-4 sm:px-6 rounded-xl transition-all duration-200 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 text-center sm:text-left cursor-pointer ${
+              className={`py-3.5 px-3 sm:px-6 rounded-xl transition-all duration-200 flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4 text-center sm:text-left cursor-pointer ${
                 selectedTrack === 'recording'
                   ? 'bg-amber-400 text-slate-950 shadow-lg shadow-amber-400/20 font-bold scale-[1.01]'
                   : 'text-slate-400 hover:text-white hover:bg-slate-800/80 font-medium'
               }`}
             >
               <div
-                className={`w-10 h-10 rounded-lg flex items-center justify-center shrink-0 transition-colors ${
+                className={`w-9 h-9 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center shrink-0 transition-colors ${
                   selectedTrack === 'recording'
                     ? 'bg-slate-950 text-amber-400'
                     : 'bg-slate-800 text-slate-400'
                 }`}
               >
-                <Mic2 className="w-5 h-5 stroke-[2.5]" />
+                <Mic2 className="w-4 h-4 sm:w-5 sm:h-5 stroke-[2.5]" />
               </div>
               <div className="space-y-0.5">
                 <div className="flex items-center justify-center sm:justify-start gap-2">
-                  <span className="text-base sm:text-lg font-black tracking-wider uppercase">
+                  <span className="text-sm sm:text-lg font-black tracking-wider uppercase">
                     RECORDING
                   </span>
                   <span
-                    className={`text-[10px] font-mono px-2 py-0.5 rounded font-bold uppercase ${
+                    className={`text-[10px] font-mono px-2 py-0.5 rounded font-bold uppercase hidden sm:inline-block ${
                       selectedTrack === 'recording'
                         ? 'bg-slate-950/20 text-slate-950 border border-slate-950/30'
                         : 'bg-slate-800 text-slate-400 border border-slate-700'
                     }`}
                   >
-                    5 Challenges
+                    6 Challenges
                   </span>
                 </div>
                 <div
-                  className={`flex items-center gap-1.5 text-xs font-semibold flex-wrap ${
+                  className={`hidden sm:flex items-center gap-1.5 text-xs font-semibold flex-wrap ${
                     selectedTrack === 'recording' ? 'text-slate-950/80' : 'text-slate-500'
                   }`}
                 >
@@ -633,8 +649,8 @@ export const StudentAdventure: React.FC<StudentAdventureProps> = ({
         </div>
 
         {/* Challenges Grid */}
-        <div className="space-y-4">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+        <div className="space-y-3">
+          <div className="flex items-center justify-between">
             <h2 className="text-xs font-mono font-bold text-amber-400 uppercase tracking-wider flex items-center gap-2">
               <Volume2 className="w-4 h-4" />
               <span>
@@ -643,82 +659,75 @@ export const StudentAdventure: React.FC<StudentAdventureProps> = ({
                   : 'Recording Challenges: Select a Tracking Scenario to Solve'}
               </span>
             </h2>
-            <div className="flex items-center gap-3">
-              {onOpenSchematics && (
-                <button
-                  onClick={() => onOpenSchematics()}
-                  className="px-3 py-1.5 rounded-lg border border-amber-500/30 bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer"
-                >
-                  <AudioEffectIcon name="eq" className="w-4 h-4 text-amber-400" />
-                  <span>FX & Gear Library</span>
-                </button>
-              )}
-              <span className="text-xs text-slate-500 font-mono hidden md:inline">
-                Click any challenge to start
-              </span>
-            </div>
+            <span className="text-xs text-slate-500 font-mono hidden md:inline">
+              Click any challenge to start
+            </span>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
             {currentScenarios.map((scenario) => {
               const completedRecord = portfolio?.scenarios.find(
                 (s) => s.scenarioId === scenario.id
               );
-              // Extract detected effects tested in this scenario
+              // Extract detected effects tested in this scenario (limited to 3)
               const scenarioEffects = Array.from(
                 new Set(
                   scenario.questions
                     .flatMap((q) => q.options.map((o) => detectAudioEffectKey(o.label)))
                     .filter((k): k is AudioEffectType => k !== null)
                 )
-              ).slice(0, 4);
+              ).slice(0, 3);
 
               return (
                 <div
                   key={scenario.id}
                   onClick={() => startScenario(scenario)}
-                  className={`group relative p-5 bg-slate-900/70 hover:bg-slate-900 border rounded-xl transition-all duration-200 cursor-pointer flex flex-col justify-between ${
+                  className={`group relative p-4 bg-slate-900/70 hover:bg-slate-900 border rounded-xl transition-all duration-200 cursor-pointer flex flex-col justify-between space-y-2.5 ${
                     completedRecord
                       ? 'border-emerald-500/50 bg-emerald-950/15 hover:border-emerald-400'
                       : 'border-slate-800 hover:border-amber-500/60 hover:shadow-lg hover:shadow-amber-500/5'
                   }`}
                 >
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between">
-                      <div className="w-10 h-10 rounded-lg bg-amber-500/10 border border-amber-500/20 text-amber-400 flex items-center justify-center group-hover:scale-105 transition-transform p-1">
-                        {AUDIO_EFFECT_ICONS[scenario.iconName as AudioEffectType] ? (
-                          <AudioEffectIcon
-                            name={scenario.iconName as AudioEffectType}
-                            className="w-6 h-6"
-                          />
-                        ) : (
-                          iconMap[scenario.iconName] || <Sliders className="w-5 h-5" />
-                        )}
+                  <div className="space-y-2">
+                    {/* Top Row: Schematic Icon, Title/Instrument, Score/Techniques Bubble */}
+                    <div className="flex items-center justify-between gap-2">
+                      <div className="flex items-center gap-2.5 min-w-0">
+                        <div className="w-9 h-9 rounded-lg bg-amber-500/10 border border-amber-500/20 text-amber-400 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform p-1">
+                          {AUDIO_EFFECT_ICONS[scenario.iconName as AudioEffectType] ? (
+                            <AudioEffectIcon
+                              name={scenario.iconName as AudioEffectType}
+                              className="w-5 h-5"
+                            />
+                          ) : (
+                            iconMap[scenario.iconName] || <Sliders className="w-4 h-4" />
+                          )}
+                        </div>
+                        <h3 className="text-sm sm:text-base font-bold text-white group-hover:text-amber-400 transition-colors truncate">
+                          {scenario.title}
+                        </h3>
                       </div>
+
                       {completedRecord ? (
-                        <span className="text-[11px] font-mono px-2 py-0.5 rounded border bg-emerald-500/15 border-emerald-500/40 text-emerald-300 font-semibold flex items-center gap-1">
+                        <span className="text-[11px] font-mono px-2 py-0.5 rounded border bg-emerald-500/15 border-emerald-500/40 text-emerald-300 font-semibold flex items-center gap-1 shrink-0">
                           <Check className="w-3 h-3 stroke-[2.5]" />
-                          <span>Mastered · {completedRecord.scorePercentage}%</span>
+                          <span>{completedRecord.scorePercentage}%</span>
                         </span>
                       ) : (
-                        <span className="text-[11px] font-mono text-slate-400 bg-slate-950 px-2 py-0.5 rounded border border-slate-800">
+                        <span className="text-[11px] font-mono text-slate-400 bg-slate-950 px-2 py-0.5 rounded border border-slate-800 shrink-0">
                           {scenario.questions.length} Techniques
                         </span>
                       )}
                     </div>
 
                     <div>
-                      <h3 className="text-base font-bold text-white group-hover:text-amber-400 transition-colors">
-                        {scenario.title}
-                      </h3>
-                      <p className="text-xs text-slate-400 line-clamp-2 mt-1 leading-relaxed">
+                      <p className="text-xs text-slate-400 line-clamp-2 leading-relaxed">
                         {scenario.description}
                       </p>
                     </div>
 
-                    {/* Covered gear & effects tags */}
+                    {/* Covered gear & effects tags (up to 3) */}
                     {scenarioEffects.length > 0 && (
-                      <div className="pt-2 flex items-center gap-1.5 flex-wrap">
+                      <div className="pt-1 hidden sm:flex items-center gap-1.5 flex-wrap">
                         {scenarioEffects.map((eff) => (
                           <span
                             key={eff}
@@ -733,7 +742,7 @@ export const StudentAdventure: React.FC<StudentAdventureProps> = ({
                     )}
                   </div>
 
-                  <div className="mt-5 pt-3 border-t border-slate-800/80 flex items-center justify-between text-xs font-semibold text-amber-400">
+                  <div className="mt-2 pt-2 border-t border-slate-800/80 flex items-center justify-between text-xs font-semibold text-amber-400">
                     <span>{completedRecord ? 'Replay Challenge' : 'Launch Challenge'}</span>
                     <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                   </div>
@@ -750,7 +759,13 @@ export const StudentAdventure: React.FC<StudentAdventureProps> = ({
   if (isCompleted) {
     const totalQ = activeScenario.questions.length;
     const firstTryCount = logs.filter((l) => l.wasFirstTry).length;
-    const scorePct = Math.round((firstTryCount / totalQ) * 100);
+    const totalPoints = logs.reduce((acc, log) => {
+      if (log.attempts.length === 1) return acc + 1.0;
+      if (log.attempts.length === 2) return acc + 0.5;
+      return acc + 0.0;
+    }, 0);
+    const savedRecord = portfolio?.scenarios.find((s) => s.scenarioId === activeScenario.id);
+    const scorePct = savedRecord?.scorePercentage ?? Math.round((totalPoints / totalQ) * 100);
 
     const activeStudentName =
       localStorage.getItem('aq_student_name') ||
@@ -804,9 +819,12 @@ export const StudentAdventure: React.FC<StudentAdventureProps> = ({
               <div className="text-sm font-semibold text-white">{activePeriod}</div>
             </div>
             <div className="p-3 bg-slate-950/60 rounded-lg border border-slate-800">
-              <div className="text-[11px] text-slate-400">Challenge Accuracy</div>
+              <div className="text-[11px] text-slate-400">Challenge Score</div>
               <div className="text-sm font-semibold text-amber-400 font-mono">
-                {firstTryCount} / {totalQ} ({scorePct}%)
+                {scorePct}%
+              </div>
+              <div className="text-[10px] text-slate-400 font-mono mt-0.5">
+                {totalPoints} / {totalQ} pts · {firstTryCount} 1st-try
               </div>
             </div>
             <div className="p-3 bg-slate-950/60 rounded-lg border border-slate-800">
@@ -859,7 +877,7 @@ export const StudentAdventure: React.FC<StudentAdventureProps> = ({
                 className="text-xs text-slate-400 hover:text-amber-400 transition-colors flex items-center gap-1.5 py-1 px-3 rounded-lg hover:bg-slate-800/50 cursor-pointer"
               >
                 <FileSpreadsheet className="w-3.5 h-3.5 text-amber-400" />
-                <span>View Grade Report & Get Code ({portfolio?.totalScenariosCompleted || 1} Mastered)</span>
+                <span>View Grade Report & Get Code ({portfolio?.totalScenariosCompleted || 1} Completed)</span>
               </button>
             )}
           </div>
@@ -907,11 +925,15 @@ export const StudentAdventure: React.FC<StudentAdventureProps> = ({
                   {log.wasFirstTry ? (
                     <span className="inline-flex items-center gap-1 text-[11px] font-medium text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded">
                       <Check className="w-3 h-3" />
-                      <span>1st-Try Correct</span>
+                      <span>1st-Try (+100%)</span>
+                    </span>
+                  ) : log.attempts.length === 2 ? (
+                    <span className="inline-flex items-center gap-1 text-[11px] font-medium text-amber-400 bg-amber-500/10 border border-amber-500/20 px-2 py-0.5 rounded">
+                      <span>2nd-Try (+50%)</span>
                     </span>
                   ) : (
-                    <span className="text-[11px] font-medium text-amber-400 bg-amber-500/10 border border-amber-500/20 px-2 py-0.5 rounded">
-                      {log.attempts.length} attempts
+                    <span className="text-[11px] font-medium text-slate-400 bg-slate-800 border border-slate-700 px-2 py-0.5 rounded">
+                      {log.attempts.length} attempts (0%)
                     </span>
                   )}
                 </div>
@@ -975,12 +997,125 @@ export const StudentAdventure: React.FC<StudentAdventureProps> = ({
           )}
         </div>
 
-        {/* Audio Visualizer Component */}
-        <AudioVisualizer
-          demoType={
-            currentQuestion?.options.find((o) => o.id === selectedOptionId)?.soundDemoType
-          }
-        />
+        {/* Unified Correct Technique & Explanation Card (between question and answers) */}
+        {feedbackState === 'correct' && selectedOptionId && (() => {
+          const selectedOpt = currentQuestion?.options.find((o) => o.id === selectedOptionId);
+          const effKey = selectedOpt ? detectAudioEffectKey(selectedOpt.label) : null;
+          const dKey = effKey || selectedOpt?.soundDemoType || activeScenario?.iconName;
+          const isPlaying = dKey && playingDemoKey === dKey;
+          return (
+            <div className="p-5 rounded-xl bg-emerald-950/30 border border-emerald-500/40 space-y-4">
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <div className="flex items-center gap-2 font-semibold text-sm text-emerald-200">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                  <span>Correct Technique!</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  {dKey && hasAudioPlayback(dKey as AudioEffectType) && (
+                    <button
+                      type="button"
+                      onClick={() => handlePlayDemo(dKey)}
+                      className={`text-xs font-semibold px-3 py-1.5 rounded-lg border transition-all flex items-center gap-1.5 cursor-pointer shadow-sm ${
+                        isPlaying
+                          ? 'bg-emerald-500 text-slate-950 border-white ring-2 ring-emerald-400/50 animate-pulse'
+                          : 'text-emerald-300 hover:text-white bg-emerald-500/20 border-emerald-500/40 hover:bg-emerald-500/30'
+                      }`}
+                    >
+                      <Volume2 className="w-3.5 h-3.5 text-emerald-400" />
+                      <span>Hear Effect</span>
+                    </button>
+                  )}
+                  {effKey && onOpenSchematics && (
+                    <button
+                      type="button"
+                      onClick={() => onOpenSchematics(effKey)}
+                      className="text-xs font-semibold px-3 py-1.5 rounded-lg border border-amber-500/40 bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 transition-all flex items-center gap-1.5 cursor-pointer shadow-sm"
+                    >
+                      <span>Explore in FX & Gear Library</span>
+                    </button>
+                  )}
+                </div>
+              </div>
+              <p className="text-xs leading-relaxed text-slate-300">
+                {selectedOpt?.explanation}
+              </p>
+
+              <div className="pt-2 border-t border-emerald-500/20 flex flex-wrap items-center justify-between gap-3">
+                {/* Bottom Left: Audio demo icon + general description */}
+                {dKey && (() => {
+                  const demoType = dKey;
+                  const DEMO_TO_ICON: Record<string, AudioEffectType> = {
+                    'de-esser': 'de-esser',
+                    compressor: 'compressor',
+                    'serial-compression': 'serial-compression',
+                    'parallel-compression': 'parallel-compression',
+                    'sidechain-compression': 'sidechain-compression',
+                    filter: 'hi-pass-filter',
+                    saturation: 'saturation',
+                    chorus: 'chorus',
+                    reverb: 'reverb',
+                    gated: 'reverb',
+                    bitcrush: 'bitcrusher',
+                    tremolo: 'tremolo',
+                  };
+                  const labels: Record<string, { name: string; desc: string }> = {
+                    'de-esser': { name: 'De-Esser Action', desc: 'Listen to frequency-dependent high attenuation' },
+                    compressor: { name: 'Compression Clamp', desc: 'Hear dynamic leveling and peak suppression' },
+                    'serial-compression': { name: 'Serial Compression', desc: 'Chaining multiple units for transparent gain reduction' },
+                    'parallel-compression': { name: 'Parallel Compression', desc: 'Blending squashed parallel copy with dry signal' },
+                    'sidechain-compression': { name: 'Sidechain Compression', desc: 'Ducking volume automatically from an external trigger' },
+                    filter: { name: 'Filter Frequency Sweep', desc: 'Listen to high-pass cutoff sweep in action' },
+                    saturation: { name: 'Harmonic Saturation', desc: 'Warm analog clipping & harmonic excitation' },
+                    chorus: { name: 'Chorus Doubling', desc: 'Detuned multi-voice modulation spread' },
+                    reverb: { name: 'Reverb', desc: 'Diffuse room reflections & decay tail' },
+                    gated: { name: 'Classic 80s Gated Snare', desc: 'Explosive reverb tail abruptly severed by gate' },
+                    bitcrush: { name: 'Digital Bitcrush', desc: 'Stepped quantization & lo-fi sample downsampling' },
+                    tremolo: { name: 'Tremolo Volume Pulse', desc: 'LFO-modulated periodic amplitude pulsing' },
+                  };
+                  const iconKey: AudioEffectType =
+                    demoType in AUDIO_EFFECT_ICONS
+                      ? (demoType as AudioEffectType)
+                      : DEMO_TO_ICON[demoType] || 'eq';
+                  const meta = AUDIO_EFFECT_ICONS[iconKey];
+                  const info = labels[demoType] || (meta ? { name: meta.name, desc: meta.description } : { name: 'Audio Demo', desc: 'Interactive concept audio preview' });
+
+                  return (
+                    <div className="flex items-center gap-2.5 min-w-0">
+                      <div className="w-10 h-7 rounded-lg bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-300 shrink-0 p-0.5">
+                        <AudioEffectIcon name={iconKey} className="w-full h-full" />
+                      </div>
+                      <div className="min-w-0">
+                        <div className="text-xs font-semibold text-emerald-100 truncate">{info.name}</div>
+                        <div className="text-[10px] text-emerald-300/85 truncate">{info.desc}</div>
+                      </div>
+                    </div>
+                  );
+                })()}
+
+                {/* Bottom Right: Next Technique Button */}
+                <div>
+                  {questionIndex < activeScenario.questions.length - 1 ? (
+                    <button
+                      onClick={handleNextQuestion}
+                      className="px-4 py-2 text-xs font-semibold bg-emerald-400 hover:bg-emerald-300 text-slate-950 rounded-lg transition-colors flex items-center gap-1.5 shrink-0 cursor-pointer shadow-sm"
+                    >
+                      <span>Next Technique</span>
+                      <ChevronRight className="w-4 h-4" />
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => completeAdventure(logs)}
+                      className="px-4 py-2 text-xs font-semibold bg-emerald-400 hover:bg-emerald-300 text-slate-950 rounded-lg transition-colors flex items-center gap-1.5 shrink-0 cursor-pointer shadow-sm"
+                    >
+                      <span>Finish Challenge</span>
+                      <ChevronRight className="w-4 h-4" />
+                    </button>
+                  )}
+                </div>
+              </div>
+            </div>
+          );
+        })()}
 
         {/* Options Grid */}
         <div className="grid grid-cols-1 gap-3 pt-2">
@@ -988,6 +1123,8 @@ export const StudentAdventure: React.FC<StudentAdventureProps> = ({
             const isSelected = selectedOptionId === option.id;
             const hasAttempted = currentAttempts.includes(option.label);
             const effectKey = detectAudioEffectKey(option.label);
+            const demoKey = effectKey || option.soundDemoType || activeScenario?.iconName;
+            const isPlayingThis = demoKey && playingDemoKey === demoKey;
 
             let btnStyle =
               'bg-slate-950/80 hover:bg-slate-900 border-slate-800 text-slate-200 hover:border-slate-700';
@@ -1004,13 +1141,26 @@ export const StudentAdventure: React.FC<StudentAdventureProps> = ({
             }
 
             return (
-              <button
+              <div
                 key={option.id}
-                onClick={() => handleSelectOption(option.id)}
-                disabled={feedbackState === 'correct'}
-                className={`p-4 rounded-xl border text-left transition-all duration-150 flex items-center justify-between gap-4 cursor-pointer disabled:cursor-default ${btnStyle}`}
+                role="button"
+                tabIndex={0}
+                onClick={() => {
+                  if (feedbackState !== 'correct') {
+                    handleSelectOption(option.id);
+                  }
+                }}
+                onKeyDown={(e) => {
+                  if ((e.key === 'Enter' || e.key === ' ') && feedbackState !== 'correct') {
+                    e.preventDefault();
+                    handleSelectOption(option.id);
+                  }
+                }}
+                className={`p-4 rounded-xl border text-left transition-all duration-150 flex items-center justify-between gap-4 select-none ${
+                  feedbackState === 'correct' ? 'cursor-default' : 'cursor-pointer'
+                } ${btnStyle}`}
               >
-                <div className="flex items-center gap-3 min-w-0">
+                <div className="flex items-center gap-3 min-w-0 flex-1">
                   <div
                     className={`w-6 h-6 rounded-full border flex items-center justify-center shrink-0 ${
                       isSelected && option.isCorrect
@@ -1036,12 +1186,21 @@ export const StudentAdventure: React.FC<StudentAdventureProps> = ({
                   {/* Equipment & FX Icon */}
                   {effectKey && (
                     <div
+                      role="button"
+                      tabIndex={0}
                       onClick={(e) => {
                         e.stopPropagation();
                         onOpenSchematics?.(effectKey);
                       }}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          e.stopPropagation();
+                          e.preventDefault();
+                          onOpenSchematics?.(effectKey);
+                        }
+                      }}
                       title={`${AUDIO_EFFECT_ICONS[effectKey]?.name} (click to inspect info)`}
-                      className={`w-12 h-8 rounded-lg border flex items-center justify-center p-0.5 shrink-0 transition-all cursor-pointer hover:border-amber-400/80 hover:bg-slate-800 ${
+                      className={`relative z-10 w-12 h-8 rounded-lg border flex items-center justify-center p-0.5 shrink-0 transition-all cursor-pointer hover:border-amber-400/80 hover:bg-slate-800 pointer-events-auto active:scale-95 ${
                         isSelected && option.isCorrect
                           ? 'bg-emerald-500/20 border-emerald-400 text-emerald-200'
                           : isSelected && !option.isCorrect
@@ -1049,11 +1208,20 @@ export const StudentAdventure: React.FC<StudentAdventureProps> = ({
                           : 'bg-slate-900 border-slate-700/80 text-slate-300'
                       }`}
                     >
-                      <AudioEffectIcon name={effectKey} className="w-full h-full" />
+                      <AudioEffectIcon
+                        name={effectKey}
+                        className={`w-full h-full ${
+                          activeScenario?.id === 'eq-module' &&
+                          (questionIndex === 1 || questionIndex === 2) &&
+                          option.id === 'opt-1'
+                            ? 'scale-y-[-1]'
+                            : ''
+                        }`}
+                      />
                     </div>
                   )}
 
-                  <span className="text-sm font-semibold truncate">{option.label}</span>
+                  <span className="text-sm font-semibold whitespace-normal break-words flex-1">{option.label}</span>
                 </div>
 
                 <div className="flex items-center gap-2 shrink-0">
@@ -1065,113 +1233,33 @@ export const StudentAdventure: React.FC<StudentAdventureProps> = ({
                         onOpenSchematics(effectKey);
                       }}
                       title="Inspect info & sound demo"
-                      className="text-[10px] font-mono text-slate-400 hover:text-amber-300 px-2 py-0.5 rounded bg-slate-900/60 border border-slate-800 hover:border-slate-700 hover:bg-slate-800 transition-colors inline-flex items-center gap-1 cursor-pointer active:scale-95"
+                      className="relative z-10 text-[10px] font-mono text-slate-300 hover:text-amber-300 px-2.5 py-1 rounded bg-slate-900/90 border border-slate-700 hover:border-amber-400/80 hover:bg-slate-800 transition-all inline-flex items-center gap-1 cursor-pointer active:scale-95 shadow-sm pointer-events-auto"
                     >
+                      <Info className="w-3 h-3 text-amber-400" />
                       <span>Info</span>
                     </button>
                   )}
-
-                  {option.isCorrect && feedbackState === 'correct' && (
-                    <span className="text-xs font-medium text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-md shrink-0">
-                      Optimal Technique
-                    </span>
-                  )}
                 </div>
-              </button>
+              </div>
             );
           })}
         </div>
 
-        {/* Immediate Feedback Box */}
-        {feedbackState !== 'idle' && selectedOptionId && (
-          <div
-            className={`p-5 rounded-xl border space-y-2 transition-all ${
-              feedbackState === 'correct'
-                ? 'bg-emerald-950/30 border-emerald-500/40 text-emerald-200'
-                : 'bg-rose-950/30 border-rose-500/40 text-rose-200'
-            }`}
-          >
-            <div className="flex items-center gap-2 font-semibold text-sm">
-              {feedbackState === 'correct' ? (
-                <>
-                  <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                  <span>Correct Technique!</span>
-                </>
-              ) : (
-                <>
-                  <XCircle className="w-4 h-4 text-rose-400" />
-                  <span>Not quite the right tool.</span>
-                </>
-              )}
-            </div>
-
-            <p className="text-xs leading-relaxed text-slate-300">
-              {
-                currentQuestion?.options.find((o) => o.id === selectedOptionId)?.explanation
-              }
-            </p>
-
-            {/* Equipment & Tool Highlight in Feedback */}
-            {(() => {
-              const selectedOpt = currentQuestion?.options.find((o) => o.id === selectedOptionId);
-              const chosenEffect = selectedOpt ? detectAudioEffectKey(selectedOpt.label) : null;
-              if (!chosenEffect) return null;
-              const meta = AUDIO_EFFECT_ICONS[chosenEffect];
-              return (
-                <div className="mt-3 p-3 rounded-xl bg-slate-950/80 border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                  <div className="flex items-center gap-3">
-                    <div className="w-18 h-11 rounded-lg bg-slate-900 border border-slate-700 p-0.5 flex items-center justify-center shrink-0">
-                      <AudioEffectIcon name={chosenEffect} className="w-full h-full text-amber-400" />
-                    </div>
-                    <div>
-                      <div className="text-xs font-bold text-white flex items-center gap-1.5">
-                        <span>{meta?.name}</span>
-                      </div>
-                      <div className="text-[11px] text-slate-400 line-clamp-1">
-                        {meta?.description}
-                      </div>
-                    </div>
-                  </div>
-
-                  {onOpenSchematics && (
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onOpenSchematics(chosenEffect);
-                      }}
-                      className="text-xs font-semibold text-amber-400 hover:text-amber-300 px-3 py-1.5 rounded-lg bg-amber-500/10 border border-amber-500/30 hover:bg-amber-500/20 transition-colors flex items-center gap-1.5 shrink-0 self-start sm:self-center cursor-pointer"
-                    >
-                      <span>Explore</span>
-                    </button>
-                  )}
-                </div>
-              );
-            })()}
-
-            {feedbackState === 'correct' && (
-              <div className="pt-2 flex items-center justify-end">
-                {questionIndex < activeScenario.questions.length - 1 ? (
-                  <button
-                    onClick={handleNextQuestion}
-                    className="px-4 py-2 text-xs font-semibold bg-emerald-400 hover:bg-emerald-300 text-slate-950 rounded-lg transition-colors flex items-center gap-1.5 shrink-0 cursor-pointer"
-                  >
-                    <span>Next Technique</span>
-                    <ChevronRight className="w-4 h-4" />
-                  </button>
-                ) : (
-                  <button
-                    onClick={() => completeAdventure(logs)}
-                    className="px-4 py-2 text-xs font-semibold bg-amber-400 hover:bg-amber-300 text-slate-950 rounded-lg transition-colors flex items-center gap-1.5 shrink-0 cursor-pointer"
-                  >
-                    <span>Finish Challenge</span>
-                    <Award className="w-4 h-4" />
-                  </button>
-                )}
+        {/* Incorrect Attempt Feedback Box at the Bottom */}
+        {feedbackState === 'incorrect' && selectedOptionId && (() => {
+          const incorrectOpt = currentQuestion?.options.find((o) => o.id === selectedOptionId);
+          return (
+            <div className="p-4 rounded-xl bg-rose-950/40 border border-rose-500/50 space-y-2">
+              <div className="flex items-center gap-2 font-semibold text-xs text-rose-300">
+                <XCircle className="w-4 h-4 text-rose-400" />
+                <span>Incorrect Technique: {incorrectOpt?.label}</span>
               </div>
-            )}
-          </div>
-        )}
+              <p className="text-xs leading-relaxed text-slate-300">
+                {incorrectOpt?.explanation}
+              </p>
+            </div>
+          );
+        })()}
       </div>
     </div>
   );

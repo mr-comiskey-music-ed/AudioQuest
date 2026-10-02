@@ -356,23 +356,7 @@ class SoundEngine {
         g.connect(this.ctx.destination);
         osc.start(now);
         osc.stop(now + 0.17);
-      } else if (concept === 'vinyl') {
-        // Vinyl needle drop & warm crackle
-        const bufferSize = this.ctx.sampleRate * 0.5;
-        const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
-        const output = buffer.getChannelData(0);
-        for (let i = 0; i < bufferSize; i++) {
-          output[i] = Math.random() < 0.02 ? (Math.random() * 2 - 1) * 0.8 : (Math.random() * 2 - 1) * 0.05;
-        }
-        const noise = this.ctx.createBufferSource();
-        noise.buffer = buffer;
-        const g = this.ctx.createGain();
-        g.gain.setValueAtTime(0.12, now);
-        g.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
-        noise.connect(g);
-        g.connect(this.ctx.destination);
-        noise.start(now);
-        noise.stop(now + 0.52);
+
       } else if (concept === 'tremolo') {
         // Tremolo volume pulse
         const osc = this.ctx.createOscillator();
@@ -554,7 +538,7 @@ class SoundEngine {
           osc.start(now + idx * 0.08);
           osc.stop(now + idx * 0.08 + 0.7);
         });
-      } else if (concept === 'piano') {
+      } else if (concept === 'piano' || concept === 'acoustic-piano') {
         // Rich acoustic grand piano chord with harmonic resonance
         const freqs = [261.63, 329.63, 392.0, 523.25]; // C4, E4, G4, C5
         freqs.forEach((f, idx) => {

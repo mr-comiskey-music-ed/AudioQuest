@@ -4,6 +4,9 @@ export type AudioEffectType =
   // Audio FX & Processing
   | 'eq'
   | 'compressor'
+  | 'serial-compression'
+  | 'parallel-compression'
+  | 'sidechain-compression'
   | 'reverb'
   | 'spring-reverb'
   | 'gated-reverb'
@@ -29,7 +32,6 @@ export type AudioEffectType =
   | 'dynamic-eq'
   | 'transient-shaper'
   | 'pitch-shifter'
-  | 'vinyl'
   // Recording Equipment, Instruments & Studio Accessories
   | 'kick-drum'
   | 'snare-drum'
@@ -43,6 +45,7 @@ export type AudioEffectType =
   | 'bass-guitar'
   | '808-bass'
   | 'piano'
+  | 'acoustic-piano'
   | 'dynamic-mic'
   | 'pencil-mic'
   | 'kick-drum-mic'
@@ -62,7 +65,8 @@ export type AudioEffectType =
   | 'polar-cardioid'
   | 'polar-figure8'
   | 'polar-omni'
-  | 'polar-supercardioid';
+  | 'polar-supercardioid'
+  | 'polar-shotgun';
 
 export interface AudioIconProps extends React.SVGProps<SVGSVGElement> {
   className?: string;
@@ -150,6 +154,79 @@ export const IconCompressor: React.FC<AudioIconProps> = ({ className = 'w-6 h-6'
     <line x1="50" y1="95" x2="50" y2="80" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
     <path d="M 44 86 L 50 80 L 56 86" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
     <path d="M 6 50 L 13 50 C 14.5 50 16 46 17 43 C 18 40 18.5 58 19.5 61 C 20.5 64 21 20 22 14 C 23 8 23.5 82 24.5 86 C 25.5 90 26.5 35 27.5 30 C 28.5 25 29.5 53 30.5 56 C 31.5 59 32 41 33 39 C 34 37 34.5 51 35.5 53 C 37 56 38 41 41.5 38 C 45 35 46 45 49 51 C 52 57 55 58 58 57 C 62 56 64 45 68 45 C 72 45 74 54 79 54 C 84 54 87 50 94 50" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+  </svg>
+);
+
+// Serial Compression
+export const IconSerialCompression: React.FC<AudioIconProps> = ({ className = 'w-6 h-6', ...props }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="14 10 100 96" className={className} {...props}>
+    {/* TOP ROW: Compressor 1 + Compressor 2 */}
+    <rect x="18" y="14" width="36" height="38" rx="8" fill="none" stroke="currentColor" strokeWidth="3" />
+    <path d="M 22 33 L 25 33 L 27 21 L 29 43 L 32 27 L 35 38 L 38 30 L 41 35 L 44 33 L 50 33" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+    <line x1="21" y1="22" x2="51" y2="22" stroke="currentColor" strokeWidth="1.8" strokeDasharray="2 2" />
+    <line x1="21" y1="44" x2="51" y2="44" stroke="currentColor" strokeWidth="1.8" strokeDasharray="2 2" />
+    <path d="M 35 17 L 35 20 M 33 18.5 L 35 20 L 37 18.5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    <path d="M 35 49 L 35 46 M 33 47.5 L 35 46 L 37 47.5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+
+    {/* Plus (+) */}
+    <line x1="58" y1="33" x2="68" y2="33" stroke="currentColor" strokeWidth="4" strokeLinecap="round" />
+    <line x1="63" y1="28" x2="63" y2="38" stroke="currentColor" strokeWidth="4" strokeLinecap="round" />
+
+    {/* Box 2 */}
+    <rect x="74" y="14" width="36" height="38" rx="8" fill="none" stroke="currentColor" strokeWidth="3" />
+    <path d="M 78 33 L 81 33 L 83 21 L 85 43 L 88 27 L 91 38 L 94 30 L 97 35 L 100 33 L 106 33" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+    <line x1="77" y1="22" x2="107" y2="22" stroke="currentColor" strokeWidth="1.8" strokeDasharray="2 2" />
+    <line x1="77" y1="44" x2="107" y2="44" stroke="currentColor" strokeWidth="1.8" strokeDasharray="2 2" />
+    <path d="M 91 17 L 91 20 M 89 18.5 L 91 20 L 93 18.5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    <path d="M 91 49 L 91 46 M 89 47.5 L 91 46 L 93 47.5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+
+    {/* BOTTOM ROW: Equals (=) + Final Squashed Waveform */}
+    <line x1="16" y1="76" x2="26" y2="76" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round" />
+    <line x1="16" y1="84" x2="26" y2="84" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round" />
+
+    <line x1="32" y1="80" x2="112" y2="80" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+    <path d="M 32 80 L 38 80 L 42 72 L 46 88 L 50 76 L 54 84 L 58 77 L 62 83 L 66 79 L 70 81 L 74 80 L 112 80" fill="none" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round" />
+    <line x1="32" y1="68" x2="112" y2="68" stroke="currentColor" strokeWidth="2" strokeDasharray="2.5 2.5" />
+    <line x1="32" y1="92" x2="112" y2="92" stroke="currentColor" strokeWidth="2" strokeDasharray="2.5 2.5" />
+    <path d="M 72 59 L 72 64 M 69.5 61.5 L 72 64 L 74.5 61.5" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+    <path d="M 72 101 L 72 96 M 69.5 98.5 L 72 96 L 74.5 98.5" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+  </svg>
+);
+
+// Parallel Compression
+export const IconParallelCompression: React.FC<AudioIconProps> = ({ className = 'w-6 h-6', ...props }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="2 6 124 116" className={className} {...props}>
+    {/* Split Parallel Wiring extending further to left and right edges */}
+    <path d="M 4 64 L 14 64 C 20 64 24 26 34 26 L 94 26 C 104 26 108 64 114 64 L 124 64" fill="none" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round" />
+    <path d="M 14 64 C 20 64 24 102 34 102 L 94 102 C 104 102 108 64 114 64" fill="none" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round" />
+
+    {/* TOP BOX: Compressed Waveform with solid background fill to hide lines underneath */}
+    <rect x="34" y="10" width="60" height="46" rx="8" fill="#080c18" stroke="currentColor" strokeWidth="3" />
+    <path d="M 38 33 L 42 33 L 45 22 L 48 44 L 51 28 L 54 38 L 57 30 L 60 36 L 63 33 L 90 33" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+    <line x1="37" y1="18" x2="91" y2="18" stroke="currentColor" strokeWidth="1.8" strokeDasharray="2 2" />
+    <line x1="37" y1="48" x2="91" y2="48" stroke="currentColor" strokeWidth="1.8" strokeDasharray="2 2" />
+    <path d="M 64 13 L 64 17 M 62 15 L 64 17 L 66 15" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    <path d="M 64 53 L 64 49 M 62 51 L 64 49 L 66 51" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+
+    {/* BOTTOM BOX: Uncompressed / Dry Waveform with solid background fill to hide lines underneath */}
+    <rect x="34" y="70" width="60" height="46" rx="8" fill="#080c18" stroke="currentColor" strokeWidth="3" />
+    <path d="M 38 93 L 42 93 L 46 76 L 50 110 L 54 84 L 58 104 L 62 88 L 66 100 L 70 90 L 74 97 L 78 93 L 90 93" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+  </svg>
+);
+
+// Sidechain Compression
+export const IconSidechainCompression: React.FC<AudioIconProps> = ({ className = 'w-6 h-6', ...props }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="16 8 102 104" className={className} {...props}>
+    <path d="M 22 88 L 22 46 C 22 40 26 36 32 36 L 42 36" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
+    <path d="M 38 30 L 46 36 L 38 42" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
+    <line x1="48" y1="36" x2="114" y2="36" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+    <path d="M 48 36 L 54 36 L 58 20 L 62 52 L 66 26 L 70 46 L 74 30 L 78 42 L 82 33 L 86 39 L 90 36 L 114 36" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+    <line x1="48" y1="20" x2="114" y2="20" stroke="currentColor" strokeWidth="2" strokeDasharray="2.5 2.5" />
+    <line x1="48" y1="52" x2="114" y2="52" stroke="currentColor" strokeWidth="2" strokeDasharray="2.5 2.5" />
+    <path d="M 81 11 L 81 17 M 78.5 14.5 L 81 17 L 83.5 14.5" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+    <path d="M 81 61 L 81 55 M 78.5 57.5 L 81 55 L 83.5 57.5" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+    <line x1="18" y1="88" x2="114" y2="88" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+    <path d="M 18 88 L 38 88 L 42 70 L 46 106 L 50 76 L 54 98 L 58 82 L 62 94 L 66 86 L 70 90 L 74 88 L 114 88" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
   </svg>
 );
 
@@ -303,8 +380,8 @@ export const IconDeEsser: React.FC<AudioIconProps> = ({ className = 'w-6 h-6', .
     <text x="50" y="31" textAnchor="middle" dominantBaseline="central" fontFamily="'Helvetica Neue', Helvetica, Arial, 'Liberation Sans', sans-serif" fontWeight="800" fontSize="44" fill="currentColor">
       S
     </text>
-    <line x1="26" y1="8" x2="74" y2="52" stroke="#ef4444" strokeWidth="5" strokeLinecap="round" />
-    <line x1="74" y1="8" x2="26" y2="52" stroke="#ef4444" strokeWidth="5" strokeLinecap="round" />
+    <line x1="26" y1="8" x2="74" y2="52" stroke="#ffffff" strokeWidth="5" strokeLinecap="round" />
+    <line x1="74" y1="8" x2="26" y2="52" stroke="#ffffff" strokeWidth="5" strokeLinecap="round" />
   </svg>
 );
 
@@ -369,19 +446,20 @@ export const IconBitcrusher: React.FC<AudioIconProps> = ({ className = 'w-6 h-6'
 
 // Hi-Pass Filter
 export const IconHiPassFilter: React.FC<AudioIconProps> = ({ className = 'w-6 h-6', ...props }) => (
-  <svg viewBox="10 10 80 40" fill="none" xmlns="http://www.w3.org/2000/svg" className={className} {...props}>
-    <path d="M 12 12 L 12 48 L 88 48" stroke="currentColor" strokeWidth="3.2" strokeLinecap="round" strokeLinejoin="round" />
-    <path d="M 14 48 C 30 48 42 46 54 22 C 58 14 66 14 88 14" stroke="currentColor" strokeWidth="3.8" strokeLinecap="round" strokeLinejoin="round" />
+  <svg viewBox="4 8 92 40" fill="none" xmlns="http://www.w3.org/2000/svg" className={className} {...props}>
+    <line x1="6" y1="14" x2="94" y2="14" stroke="currentColor" strokeWidth="2.2" strokeOpacity="0.4" strokeLinecap="round" />
+    <path d="M 6 42 L 40 42 C 48 42, 54 36, 62 18 C 65 14, 68 14, 94 14" stroke="currentColor" strokeWidth="3.8" strokeLinecap="round" strokeLinejoin="round" />
   </svg>
 );
 
-// Lo-Pass Filter
-export const IconLoPassFilter: React.FC<AudioIconProps> = ({ className = 'w-6 h-6', ...props }) => (
-  <svg viewBox="10 10 80 40" fill="none" xmlns="http://www.w3.org/2000/svg" className={className} {...props}>
-    <path d="M 12 12 L 12 48 L 88 48" stroke="currentColor" strokeWidth="3.2" strokeLinecap="round" strokeLinejoin="round" />
-    <path d="M 14 14 C 44 14 54 14 62 26 C 70 42 76 48 88 48" stroke="currentColor" strokeWidth="3.8" strokeLinecap="round" strokeLinejoin="round" />
+// Low-Pass Filter (also aliased as Lo-Pass Filter)
+export const IconLowPassFilter: React.FC<AudioIconProps> = ({ className = 'w-6 h-6', ...props }) => (
+  <svg viewBox="4 8 92 40" fill="none" xmlns="http://www.w3.org/2000/svg" className={className} {...props}>
+    <line x1="6" y1="14" x2="94" y2="14" stroke="currentColor" strokeWidth="2.2" strokeOpacity="0.4" strokeLinecap="round" />
+    <path d="M 6 14 L 30 14 C 36 14, 42 16, 50 34 C 54 42, 60 42, 94 42" stroke="currentColor" strokeWidth="3.8" strokeLinecap="round" strokeLinejoin="round" />
   </svg>
 );
+export const IconLoPassFilter = IconLowPassFilter;
 
 // Low Shelf Cut
 export const IconLowShelfCut: React.FC<AudioIconProps> = ({ className = 'w-6 h-6', ...props }) => (
@@ -409,9 +487,9 @@ export const IconHighShelfBoost: React.FC<AudioIconProps> = ({ className = 'w-6 
 
 // High Shelf Cut
 export const IconHighShelfCut: React.FC<AudioIconProps> = ({ className = 'w-6 h-6', ...props }) => (
-  <svg viewBox="8 6 86 42" fill="none" xmlns="http://www.w3.org/2000/svg" className={className} {...props}>
-    <path d="M 12 10 L 12 44 L 90 44" stroke="currentColor" strokeWidth="3.2" strokeLinecap="round" strokeLinejoin="round" />
-    <path d="M 14 18 L 42 18 C 56 18, 64 36, 78 36 L 90 36" stroke="currentColor" strokeWidth="3.8" strokeLinecap="round" strokeLinejoin="round" />
+  <svg viewBox="4 8 92 40" fill="none" xmlns="http://www.w3.org/2000/svg" className={className} {...props}>
+    <line x1="6" y1="14" x2="94" y2="14" stroke="currentColor" strokeWidth="2.2" strokeOpacity="0.4" strokeLinecap="round" />
+    <path d="M 6 14 L 34 14 C 48 14, 56 36, 70 36 L 94 36" stroke="currentColor" strokeWidth="3.8" strokeLinecap="round" strokeLinejoin="round" />
   </svg>
 );
 
@@ -446,19 +524,7 @@ export const IconPitchShifter: React.FC<AudioIconProps> = ({ className = 'w-6 h-
   </svg>
 );
 
-// Vinyl
-export const IconVinyl: React.FC<AudioIconProps> = ({ className = 'w-6 h-6', ...props }) => (
-  <svg viewBox="16 8 68 50" fill="none" xmlns="http://www.w3.org/2000/svg" className={className} {...props}>
-    <circle cx="46" cy="32" r="23" stroke="currentColor" strokeWidth="3" />
-    <circle cx="46" cy="32" r="18" stroke="currentColor" strokeWidth="1.6" strokeOpacity="0.65" />
-    <circle cx="46" cy="32" r="14" stroke="currentColor" strokeWidth="1.3" strokeOpacity="0.45" />
-    <circle cx="46" cy="32" r="7.5" fill="currentColor" />
-    <text x="46" y="34.5" textAnchor="middle" fontSize="4.8" fontWeight="900" fontFamily="sans-serif" fill="#0f172a" letterSpacing="0.5">REC</text>
-    <circle cx="78" cy="13" r="3" stroke="currentColor" strokeWidth="2.4" />
-    <line x1="77" y1="15" x2="68" y2="35" stroke="currentColor" strokeWidth="2.8" strokeLinecap="round" />
-    <line x1="68" y1="35" x2="62" y2="36" stroke="currentColor" strokeWidth="3.4" strokeLinecap="round" />
-  </svg>
-);
+
 
 // ----------------------------------------------------------------------
 // 2. Recording Instruments, Mics & Studio Gear (NEW from user images)
@@ -681,7 +747,7 @@ export const IconPhantomPower: React.FC<AudioIconProps> = ({ className = 'w-6 h-
 // 33. Electric Guitar
 export const IconElectricGuitar: React.FC<AudioIconProps> = ({ className = 'w-6 h-6', ...props }) => (
   <svg viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg" className={className} {...props}>
-    <g transform="translate(16, 16) scale(3)" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none">
+    <g transform="translate(4, 4) scale(4)" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none">
       <polyline points="12.5,21.4 11,19.9 22.4,8.5 " />
       <polygon points="25.4,10 22.4,10 22.4,7 26.2,3.2 29.2,6.2 " />
       <path d="M19.3,11.6c-2.2-1.5-5.1-1.3-6.9,0.5c-0.4,0.4-0.8,1-1,1.5c-0.4,0.9-1.3,1.5-2.2,1.6c-0.9,0.1-1.9,0.2-2.7,0.6 c-4,2.1-4.1,7.5-0.7,10.9c3.4,3.4,8.8,3.3,10.9-0.7c0.4-0.8,0.5-1.8,0.6-2.7c0.1-0.9,0.7-1.8,1.6-2.2c0.2-0.1,0.7-0.3,1.1-0.4 c0.8-0.2,1.4-0.9,1.7-1.6v0c0.2-0.6,0-1.3-0.6-1.6l-1.6-0.9" />
@@ -693,7 +759,7 @@ export const IconElectricGuitar: React.FC<AudioIconProps> = ({ className = 'w-6 
 // Acoustic Dreadnought Guitar
 export const IconAcousticGuitar: React.FC<AudioIconProps> = ({ className = 'w-6 h-6', ...props }) => (
   <svg viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg" className={className} {...props}>
-    <g transform="translate(16, 16) scale(0.1875)" fill="currentColor" stroke="currentColor">
+    <g transform="translate(4, 4) scale(0.235)" fill="currentColor" stroke="currentColor">
       <path d="M273.48,238.486c-24.205-24.206-63.382-24.208-87.589,0c-24.205,24.204-24.208,63.381,0,87.589 c24.205,24.205,63.381,24.208,87.589,0C297.629,301.927,297.629,262.635,273.48,238.486z M249.878,302.474 c-11.159,11.16-29.225,11.162-40.387,0c-11.161-11.162-11.162-29.225,0-40.388c11.163-11.162,29.226-11.161,40.387,0 C261.014,273.221,261.014,291.339,249.878,302.474z"/>
       <path d="M494.987,16.979C484.038,6.03,469.48,0,453.997,0c-15.483,0-30.04,6.03-40.99,16.979l-22.761,22.762 c-7.539,7.539-10.132,18.177-7.782,27.85l-96.621,96.621c-40.014-21.625-88.903-22.563-119.686,8.22 c-8.608,8.608-15.015,18.979-19.045,30.825c-3.809,11.198-13.903,18.868-25.713,19.538c-32.346,1.836-62.27,14.955-84.256,36.942 c-53.375,53.376-48.555,145.044,10.744,204.343c30.453,30.453,71.28,47.919,112.013,47.92c0.002,0,0.002,0,0.004,0 c35.563,0,68.353-13.203,92.326-37.176c21.986-21.986,35.107-51.91,36.942-84.257c0.67-11.811,8.339-21.904,19.538-25.712 c11.845-4.03,22.217-10.436,30.826-19.045c31.248-31.25,29.519-80.126,8.191-119.657l96.638-96.638 c9.651,2.346,20.259-0.19,27.862-7.795l22.762-22.762C517.589,76.356,517.589,39.58,494.987,16.979z M315.934,322.208 c-4.962,4.962-11.009,8.678-17.972,11.047c-24.138,8.21-40.668,29.965-42.114,55.421c-1.391,24.502-10.802,46.13-27.219,62.547 c-40.737,40.736-111.262,35.136-157.143-10.744c-46.286-46.286-51.105-116.779-10.744-157.142 c16.417-16.417,38.045-25.829,62.547-27.219c25.456-1.445,47.21-17.974,55.421-42.114c2.369-6.964,6.086-13.01,11.047-17.972 c24.621-24.62,73.53-16.043,107.875,18.302C332.22,248.925,340.408,297.734,315.934,322.208z M328.345,198.331 c-4.683-5.345-9.737-10.35-14.709-14.712l89.398-89.398l14.71,14.71L328.345,198.331z M471.386,75.357L451.38,95.362 l-34.777-34.777l20.005-20.006c4.645-4.645,10.821-7.203,17.389-7.203c6.569,0,12.744,2.558,17.389,7.203 C480.974,50.167,480.974,65.769,471.386,75.357z"/>
       <path d="M166.799,412.023l-66.857-66.857c-6.516-6.517-17.083-6.517-23.601,0c-6.517,6.517-6.517,17.083,0,23.601l66.857,66.857 c6.516,6.517,17.083,6.518,23.601,0C173.317,429.107,173.317,418.541,166.799,412.023z"/>
@@ -701,7 +767,27 @@ export const IconAcousticGuitar: React.FC<AudioIconProps> = ({ className = 'w-6 
   </svg>
 );
 
-// Studio Synthesizer / MIDI Keyboard VST (keyboard-piano-synth-midi-vst-svgrepo-com)
+// Acoustic Piano
+export const IconAcousticPiano: React.FC<AudioIconProps> = ({ className = 'w-6 h-6', ...props }) => (
+  <svg viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg" className={className} {...props}>
+    <g transform="translate(8, 8) scale(0.225)" fill="currentColor">
+      <path d="M501.337,341.298v-39.773c0-38.905-29.781-71.247-69.164-76.206c-55.175-6.933-81.684-28.391-81.684-82.599v-4.053
+			C350.489,62.182,286.076,0,207.619,0h-54.08C75.082,0,10.67,62.182,10.67,138.667v202.667c0,0.014,0.002,0.028,0.002,0.042v149.3
+			c0,11.782,9.551,21.333,21.333,21.333h448c11.782,0,21.333-9.551,21.333-21.333V341.342
+			C501.339,341.327,501.337,341.313,501.337,341.298z M245.343,320H138.676v-85.325h106.667V320z M53.337,138.667
+			c0-52.577,44.98-96,100.203-96h54.08c55.223,0,100.203,43.423,100.203,96v4.053c0,79.332,44.813,115.606,119.025,124.932
+			c18.422,2.32,31.823,16.873,31.823,33.873V320H288.01V213.342c0-11.782-9.551-21.333-21.333-21.333H117.343
+			c-11.782,0-21.333,9.551-21.333,21.333V320H53.337V138.667z M458.672,469.342H53.339V362.675h21.336v64
+			c0,11.782,9.551,21.333,21.333,21.333s21.333-9.551,21.333-21.333v-64h0.002h21.331v64c0,11.782,9.551,21.333,21.333,21.333
+			c11.782,0,21.333-9.551,21.333-21.333v-64h21.333v64c0,11.782,9.551,21.333,21.333,21.333
+			c11.782,0,21.333-9.551,21.333-21.333v-64h21.333v64c0,11.782,9.551,21.333,21.333,21.333s21.333-9.551,21.333-21.333v-64h21.333v64
+			c0,11.782,9.551,21.333,21.333,21.333s21.333-9.551,21.333-21.333v-64h21.333v64
+			c0,11.782,9.551,21.333,21.333,21.333s21.333-9.551,21.333-21.333v-64h21.333v64
+			c0,11.782,9.551,21.333,21.333,21.333s21.333-9.551,21.333-21.333v-64h21.331V469.342z"/>
+    </g>
+  </svg>
+);
+
 export const IconPiano: React.FC<AudioIconProps> = ({ className = 'w-6 h-6', ...props }) => (
   <svg viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg" className={className} {...props}>
     {/* Studio Synthesizer Chassis */}
@@ -767,7 +853,7 @@ export const IconPiano: React.FC<AudioIconProps> = ({ className = 'w-6 h-6', ...
 // 34. Bass Guitar
 export const IconBassGuitar: React.FC<AudioIconProps> = ({ className = 'w-6 h-6', ...props }) => (
   <svg viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg" className={className} {...props}>
-    <g transform="translate(16, 16) scale(0.204)" fill="currentColor" stroke="currentColor">
+    <g transform="translate(4, 4) scale(0.24)" fill="currentColor" stroke="currentColor">
       <path d="M461.421,14.456c-5.996-5.997-13.965-9.299-22.438-9.299c-5.248,0-10.433,1.318-14.995,3.812 c-0.243,0.133-0.479,0.28-0.707,0.44l-58.725,41.165c-1.372,0.961-2.383,2.355-2.87,3.957l-4.405,14.472L203.327,216.442 l-4.358-4.358c-2.832-2.832-4.368-6.655-4.326-10.766c0.043-4.169,1.697-8.095,4.658-11.056l25.101-25.101 c10.297-10.297,10.297-27.052,0-37.349c-4.988-4.988-11.621-7.735-18.675-7.735c-7.054,0-13.687,2.747-18.675,7.735 l-42.746,42.746c-8.264,8.264-17.922,22.223-21.988,31.78c-6.867,16.14-14.527,30.78-17.378,36.101 c-7.847,3.654-35.285,16.404-66.724,30.698c-19.551,8.889-32.628,24.141-36.824,42.946c-4.483,20.09,1.978,42.23,17.727,60.741 l57.55,67.645c13.855,16.287,30.633,25.009,47.804,25.008c1.999,0,4.006-0.118,6.012-0.357 c19.234-2.286,35.762-15.278,46.525-36.557l39.514-77.449c6.08-2.148,20.411-7.241,28.786-10.446 c10.461-4.003,24.313-14.37,32.035-22.092c4.987-4.988,7.735-11.62,7.735-18.675s-2.748-13.687-7.735-18.674 c-10.297-10.297-27.052-10.297-37.349,0c-4.45,4.448-11.688,4.449-16.137,0l-5.867-5.867L387.078,98.8l14.473-4.405 c1.178-0.358,2.249-1.001,3.12-1.872l25.583-25.584c2.885,0.846,5.894,1.284,8.904,1.284c8.412,0,16.318-3.275,22.265-9.221 C473.704,46.721,473.704,26.738,461.421,14.456z M250.601,291.834c2.154-2.155,5.02-3.342,8.067-3.342 c3.047,0,5.913,1.187,8.068,3.342c2.154,2.155,3.342,5.02,3.342,8.068c0,3.048-1.188,5.913-3.342,8.068 c-6.602,6.601-18.941,15.686-26.79,18.689c-10.411,3.984-31.023,11.229-31.23,11.302c-1.817,0.638-3.319,1.952-4.194,3.667 l-40.887,80.141c-8.436,16.676-20.838,26.781-34.923,28.456c-14.083,1.671-28.512-5.242-40.62-19.476l-57.55-67.645 c-12.671-14.894-17.961-32.3-14.512-47.755c3.146-14.101,13.23-25.664,28.394-32.558c37.185-16.907,68.788-31.659,69.103-31.806 c1.437-0.671,2.624-1.779,3.391-3.167c0.416-0.753,10.294-18.673,19.202-39.608c3.313-7.787,11.919-20.173,18.793-27.046 l42.746-42.746c4.447-4.448,11.688-4.448,16.135,0c4.449,4.449,4.449,11.687,0,16.136l-25.101,25.101 c-5.753,5.753-8.967,13.392-9.05,21.509c-0.084,8.175,3.013,15.82,8.719,21.526l4.129,4.129l-43.582,41.737 c-1.457,1.395-2.29,3.319-2.313,5.336c-0.021,2.017,0.771,3.958,2.196,5.384l28.012,28.012c1.408,1.407,3.315,2.197,5.304,2.197 c0.027,0,0.054,0,0.081,0c2.017-0.022,3.94-0.855,5.336-2.312l20.088-20.976l5.638,5.637 C223.549,302.131,240.303,302.13,250.601,291.834z M181.992,291.263l-17.173-17.174L363.771,83.556l8.754,8.753L181.992,291.263z M450.815,48.396c-3.113,3.113-7.252,4.828-11.655,4.828c-2.565,0-5.124-0.603-7.399-1.743c-2.888-1.447-6.378-0.882-8.663,1.402 l-27.709,27.709l-10.25,3.12l-12.77-12.769l2.913-9.57l56.232-39.418c2.281-1.177,4.854-1.797,7.468-1.797 c4.467,0,8.669,1.742,11.832,4.906C457.248,31.496,457.248,41.963,450.815,48.396z"/>
       <path d="M124.695,326.263c-2.93-2.929-7.678-2.929-10.607,0c-2.929,2.929-2.929,7.677,0,10.606l26.337,26.337 c1.465,1.465,3.385,2.197,5.304,2.197s3.839-0.732,5.304-2.197c2.929-2.929,2.929-7.677,0-10.606L124.695,326.263z"/>
       <path d="M126.556,281.975c-2.93-2.929-7.678-2.929-10.607,0c-2.929,2.929-2.929,7.677,0,10.606l26.337,26.337 c1.465,1.465,3.385,2.197,5.304,2.197s3.839-0.732,5.304-2.197c2.929-2.929,2.929-7.677,0-10.606L126.556,281.975z"/>
@@ -1307,10 +1393,10 @@ export const IconPolarFigure8: React.FC<AudioIconProps> = ({ className = 'w-6 h-
     <text x="48" y="32.5" textAnchor="middle" fontSize="4.2" fontWeight="700" fill="currentColor" opacity="0.45">-15dB</text>
     <text x="48" y="41.5" textAnchor="middle" fontSize="4.2" fontWeight="700" fill="currentColor" opacity="0.45">-25dB</text>
 
-    {/* Dual Symmetrical Figure-8 Lobes (Front 0° & Rear 180°) */}
+    {/* Dual Symmetrical Figure-8 Lobes (Front 0° & Rear 180°) - Wider circles stacked */}
     {/* Front 0° on-axis lobe */}
     <path
-      d="M 48 48 C 28 44, 28 14, 48 10 C 68 14, 68 44, 48 48 Z"
+      d="M 48 48 C 20 48, 20 12, 48 12 C 76 12, 76 48, 48 48 Z"
       stroke="currentColor"
       strokeWidth="3.8"
       strokeLinecap="round"
@@ -1320,7 +1406,7 @@ export const IconPolarFigure8: React.FC<AudioIconProps> = ({ className = 'w-6 h-
     />
     {/* Rear 180° on-axis lobe */}
     <path
-      d="M 48 48 C 28 52, 28 82, 48 86 C 68 82, 68 52, 48 48 Z"
+      d="M 48 48 C 20 48, 20 84, 48 84 C 76 84, 76 48, 48 48 Z"
       stroke="currentColor"
       strokeWidth="3.8"
       strokeLinecap="round"
@@ -1430,8 +1516,45 @@ export const IconPolarSupercardioid: React.FC<AudioIconProps> = ({ className = '
   </svg>
 );
 
+// 54. Shotgun / Line Gradient Polar Pattern
+export const IconPolarShotgun: React.FC<AudioIconProps> = ({ className = 'w-6 h-6', ...props }) => (
+  <svg viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg" className={className} {...props}>
+    <circle cx="48" cy="48" r="38" stroke="currentColor" strokeWidth="1.2" strokeOpacity="0.3" fill="none" />
+    <circle cx="48" cy="48" r="28" stroke="currentColor" strokeWidth="1" strokeOpacity="0.22" fill="none" />
+    <circle cx="48" cy="48" r="18" stroke="currentColor" strokeWidth="1" strokeOpacity="0.2" fill="none" />
+    <circle cx="48" cy="48" r="9" stroke="currentColor" strokeWidth="0.9" strokeOpacity="0.18" fill="none" />
+    <line x1="15" y1="29" x2="81" y2="67" stroke="currentColor" strokeWidth="0.8" strokeOpacity="0.18" />
+    <line x1="29" y1="15" x2="67" y2="81" stroke="currentColor" strokeWidth="0.8" strokeOpacity="0.18" />
+    <line x1="67" y1="15" x2="29" y2="81" stroke="currentColor" strokeWidth="0.8" strokeOpacity="0.18" />
+    <line x1="81" y1="29" x2="15" y2="67" stroke="currentColor" strokeWidth="0.8" strokeOpacity="0.18" />
+    <line x1="48" y1="9" x2="48" y2="87" stroke="currentColor" strokeWidth="1.2" strokeOpacity="0.25" />
+    <line x1="9" y1="48" x2="87" y2="48" stroke="currentColor" strokeWidth="1.2" strokeOpacity="0.25" />
+    <text x="48" y="7" textAnchor="middle" fontSize="6" fontWeight="800" fill="currentColor" opacity="0.65">0°</text>
+    <text x="91" y="49.5" textAnchor="start" fontSize="5.5" fontWeight="800" fill="currentColor" opacity="0.65">90°</text>
+    <text x="48" y="94" textAnchor="middle" fontSize="6" fontWeight="800" fill="currentColor" opacity="0.65">180°</text>
+    <text x="5" y="49.5" textAnchor="end" fontSize="5.5" fontWeight="800" fill="currentColor" opacity="0.65">270°</text>
+    <path
+      d="M 48 48 C 48 48, 40 30, 40 18 C 40 12, 44 9, 48 9 C 52 9, 56 12, 56 18 C 56 30, 48 48, 48 48 Z"
+      stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" fill="currentColor" fillOpacity="0.15"
+    />
+    <path
+      d="M 48 48 C 48 48, 56 46, 62 46 C 65 46, 66 47, 66 48 C 66 49, 65 50, 62 50 C 56 50, 48 48, 48 48 Z"
+      stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="currentColor" fillOpacity="0.1"
+    />
+    <path
+      d="M 48 48 C 48 48, 40 46, 34 46 C 31 46, 30 47, 30 48 C 30 49, 31 50, 34 50 C 40 50, 48 48, 48 48 Z"
+      stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="currentColor" fillOpacity="0.1"
+    />
+    <path
+      d="M 48 48 C 48 48, 45 56, 45 62 C 45 64, 46 66, 48 66 C 50 66, 51 64, 51 62 C 51 56, 48 48, 48 48 Z"
+      stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="currentColor" fillOpacity="0.12"
+    />
+    <circle cx="48" cy="48" r="4.2" stroke="currentColor" strokeWidth="1.5" fill="#0f172a" />
+  </svg>
+);
+
 // ----------------------------------------------------------------------
-// Master Registry of all 49 Audio Engineering & Recording Icons
+// Master Registry of all Audio Engineering & Recording Icons
 // ----------------------------------------------------------------------
 export const AUDIO_EFFECT_ICONS: Record<
   AudioEffectType,
@@ -1453,7 +1576,7 @@ export const AUDIO_EFFECT_ICONS: Record<
 > = {
   // FX & Mixing (25)
   eq: {
-    name: 'EQ (Parametric)',
+    name: 'EQ (Equalization)',
     component: IconEQ,
     category: 'frequency',
     description: 'Sculpts tonal balance by boosting or cutting specific frequency pockets.',
@@ -1462,7 +1585,25 @@ export const AUDIO_EFFECT_ICONS: Record<
     name: 'Compressor',
     component: IconCompressor,
     category: 'dynamics',
-    description: 'Regulates dynamic range, clamping loud transient spikes and boosting subtle tails.',
+    description: 'Regulates dynamic range, clamping loud transient spikes and boosting subtle tails. Can also be used for advanced techniques such as parallel, serial, and sidechain compression.',
+  },
+  'serial-compression': {
+    name: 'Serial Compression',
+    component: IconSerialCompression,
+    category: 'dynamics',
+    description: 'Chains multiple compressors in sequence where each unit applies gentle, transparent gain reduction for smooth and natural dynamic control.',
+  },
+  'parallel-compression': {
+    name: 'Parallel Compression (New York)',
+    component: IconParallelCompression,
+    category: 'dynamics',
+    description: 'Blends a heavily squashed and saturated parallel copy with the uncompressed dry signal to retain transient punch while thickening sustain.',
+  },
+  'sidechain-compression': {
+    name: 'Sidechain Compression',
+    component: IconSidechainCompression,
+    category: 'dynamics',
+    description: 'Ducks signal volume automatically in response to an external trigger source (such as ducking a bassline when the kick drum hits).',
   },
   reverb: {
     name: 'Reverb',
@@ -1527,7 +1668,7 @@ export const AUDIO_EFFECT_ICONS: Record<
   tremolo: {
     name: 'Tremolo',
     component: IconTremolo,
-    category: 'dynamics',
+    category: 'time',
     description: 'Modulates amplitude periodically with an LFO to create rhythmic volume pulsing.',
   },
   'de-esser': {
@@ -1537,7 +1678,7 @@ export const AUDIO_EFFECT_ICONS: Record<
     description: 'Frequency-specific compression targeting harsh sibilant "s" and "t" frequencies (5k–8kHz).',
   },
   delay: {
-    name: 'Delay',
+    name: 'Delay & Echo',
     component: IconDelay,
     category: 'time',
     description: 'Creates rhythmic repeating echo reflections with controlled feedback and timing.',
@@ -1561,8 +1702,8 @@ export const AUDIO_EFFECT_ICONS: Record<
     description: 'Rolls off sub-bass rumble while allowing all higher frequencies to pass untouched.',
   },
   'lo-pass-filter': {
-    name: 'Lo-Pass Filter',
-    component: IconLoPassFilter,
+    name: 'Low-Pass Filter',
+    component: IconLowPassFilter,
     category: 'frequency',
     description: 'Rolls off harsh treble and synth fizz while preserving fundamental low frequencies.',
   },
@@ -1611,14 +1752,8 @@ export const AUDIO_EFFECT_ICONS: Record<
   'pitch-shifter': {
     name: 'Pitch Shifter',
     component: IconPitchShifter,
-    category: 'other',
+    category: 'time',
     description: 'Shifts pitch up or down without altering playback duration or tempo.',
-  },
-  vinyl: {
-    name: 'Vinyl / Turntable',
-    component: IconVinyl,
-    category: 'other',
-    description: 'Adds authentic analog turntable warmth, needle hiss, crackle, and RIAA curve character.',
   },
 
   // Recording & Studio Gear (24)
@@ -1688,41 +1823,47 @@ export const AUDIO_EFFECT_ICONS: Record<
     category: 'instruments',
     description: 'Iconic tuned sub-bass with punchy attack transient and long decaying sinusoidal resonance.',
   },
+  'acoustic-piano': {
+    name: 'Acoustic Piano',
+    component: IconAcousticPiano,
+    category: 'instruments',
+    description: '88-key acoustic grand piano with wooden soundboard and hammers delivering rich resonant acoustic resonance.',
+  },
   piano: {
-    name: 'Acoustic Piano / Keyboard',
+    name: 'Keyboard & Synthesizer',
     component: IconPiano,
     category: 'instruments',
-    description: '88-key acoustic grand piano or studio electric keybed delivering dynamic polyphonic harmonies.',
+    description: 'Electronic keyboard instruments including electric pianos, synthesizers, organs, clavinovas, mellotrons, etc.',
   },
   'dynamic-mic': {
-    name: 'Dynamic Mic (SM57-style)',
+    name: 'Dynamic Instrument Microphone',
     component: IconDynamicMic,
     category: 'microphones',
     description: 'Rugged moving-coil cardioid microphone handling extreme sound pressure on snares and guitar cabs.',
   },
   'pencil-mic': {
-    name: 'SDC Pencil Mic (SM81-style)',
+    name: 'SDC (Small Diaphragm Condenser)',
     component: IconPencilMic,
     category: 'microphones',
     description: 'Small diaphragm condenser with ultra-fast transient response ideal for drum overheads & acoustic guitar.',
   },
   'kick-drum-mic': {
-    name: 'Kick Drum Mic',
+    name: 'Large Diaphragm Kick Microphone',
     component: IconKickDrumMic,
     category: 'microphones',
     description: 'Heavy dynamic mic tuned with sub-low scoop and beater click presence for kick drums & bass cabs.',
   },
   'vocal-mic': {
-    name: 'Handheld Vocal Mic (SM58-style)',
+    name: 'Handheld Dynamic Vocal Microphone',
     component: IconVocalMic,
     category: 'microphones',
     description: 'Indestructible dynamic vocal mic with internal pop protection and proximity effect for lead singing.',
   },
   'u87-mic': {
-    name: 'Large Diaphragm Condenser',
+    name: 'Large Diaphragm Condenser (LDC)',
     component: IconU87Mic,
     category: 'microphones',
-    description: 'Flagship studio condenser microphone delivering warm, silky high-fidelity vocal and acoustic capture.',
+    description: 'Studio condenser microphone featuring a large gold-sputtered diaphragm delivering warm, silky high-fidelity vocal and acoustic capture.',
   },
   'c414-mic': {
     name: 'Multi-Pattern Large Diaphragm Condenser',
@@ -1776,7 +1917,7 @@ export const AUDIO_EFFECT_ICONS: Record<
     name: 'Studio Headphones',
     component: IconStudioHeadphones,
     category: 'gear',
-    description: 'Closed-back monitoring headphones preventing backing track click bleed into sensitive open vocal mics.',
+    description: 'Closed-back monitoring headphones preventing backing track click bleed into sensitive open vocal mics. Open-backed studio headphones are another common option for studio mixing because they can provide a better sense of the mix\'s sound stage.',
   },
   'studio-monitors': {
     name: 'Studio Monitors',
@@ -1785,15 +1926,15 @@ export const AUDIO_EFFECT_ICONS: Record<
     description: 'Nearfield active bi-amplified reference speakers providing flat, uncolored frequency response for mixing.',
   },
 
-  // Polar Pickup Patterns (4)
+  // Polar Pickup Patterns (5)
   'polar-cardioid': {
-    name: 'Cardioid Polar Pattern',
+    name: 'Cardioid Pattern',
     component: IconPolarCardioid,
     category: 'polar-patterns',
     description: 'Heart-shaped directional pickup capturing on-axis sound while rejecting 180° rear bleed and room reflections.',
   },
   'polar-figure8': {
-    name: 'Figure-8 (Bidirectional)',
+    name: 'Figure-8 (Bidirectional) Pattern',
     component: IconPolarFigure8,
     category: 'polar-patterns',
     description: 'Dual symmetrical lobes capturing front and rear audio equally while completely rejecting 90° and 270° sides.',
@@ -1809,6 +1950,12 @@ export const AUDIO_EFFECT_ICONS: Record<
     component: IconPolarSupercardioid,
     category: 'polar-patterns',
     description: 'Narrower directional front pickup with 125°/235° side nulls and a small rear lobe for maximum isolation.',
+  },
+  'polar-shotgun': {
+    name: 'Shotgun Pattern',
+    component: IconPolarShotgun,
+    category: 'polar-patterns',
+    description: 'Extremely directional line gradient interference tube pattern with a narrow forward lobe, designed for film boom mics and isolating vocals in noisy environments.',
   },
 };
 
@@ -1852,7 +1999,7 @@ export const AudioEffectCard: React.FC<{
       <div className="w-full aspect-[5/3] flex items-center justify-center p-1 rounded-lg bg-slate-950/70 border border-slate-800">
         <Comp className="w-full h-full max-h-14 text-slate-100" />
       </div>
-      <span className="text-[11px] font-semibold tracking-tight text-slate-300 truncate w-full">
+      <span className="text-[10px] font-semibold tracking-tight text-slate-300 whitespace-normal break-words line-clamp-2 w-full min-h-[28px] flex items-center justify-center">
         {caption || meta.name}
       </span>
     </div>
@@ -1918,7 +2065,6 @@ export function detectAudioEffectKey(text: string): AudioEffectType | null {
   // 2. Specific Microphones & Transducers
   if (
     lower.includes('u87') ||
-    lower.includes('neumann') ||
     lower.includes('large diaphragm condenser') ||
     lower.includes('ldc')
   ) {
@@ -1927,7 +2073,6 @@ export function detectAudioEffectKey(text: string): AudioEffectType | null {
   if (
     lower.includes('c414') ||
     lower.includes('414') ||
-    lower.includes('akg c414') ||
     lower.includes('multi-pattern')
   ) {
     return 'c414-mic';
@@ -1964,15 +2109,13 @@ export function detectAudioEffectKey(text: string): AudioEffectType | null {
     lower.includes('kick mic') ||
     lower.includes('kick drum mic') ||
     lower.includes('d112') ||
-    lower.includes('beta 52') ||
-    lower.includes('audix d6')
+    lower.includes('beta 52')
   ) {
     return 'kick-drum-mic';
   }
   if (
     lower.includes('ribbon') ||
     lower.includes('r-121') ||
-    lower.includes('royer') ||
     lower.includes('figure-8 ribbon')
   ) {
     return 'ribbon-mic';
@@ -2206,10 +2349,20 @@ export function detectAudioEffectKey(text: string): AudioEffectType | null {
     return 'limiter';
   }
 
+  // Advanced Compression Techniques
+  if (lower.includes('serial compression') || lower.includes('serial')) {
+    return 'serial-compression';
+  }
+  if (lower.includes('parallel compression') || lower.includes('parallel') || lower.includes('new york')) {
+    return 'parallel-compression';
+  }
+  if (lower.includes('sidechain compression') || lower.includes('sidechain')) {
+    return 'sidechain-compression';
+  }
+
   // Compressor / Compression / Sidechain
   if (
     lower.includes('compress') ||
-    lower.includes('sidechain') ||
     lower.includes('opto') ||
     lower.includes('vca')
   ) {
@@ -2224,6 +2377,11 @@ export function detectAudioEffectKey(text: string): AudioEffectType | null {
     lower.includes('8-bit')
   ) {
     return 'bitcrusher';
+  }
+
+  // Tremolo
+  if (lower.includes('tremolo')) {
+    return 'tremolo';
   }
 
   // Noise Gate / Gate
@@ -2271,11 +2429,6 @@ export function detectAudioEffectKey(text: string): AudioEffectType | null {
     return 'delay';
   }
 
-  // Tremolo
-  if (lower.includes('tremolo')) {
-    return 'tremolo';
-  }
-
   // Saturation / Tube / Tape Saturation
   if (
     lower.includes('saturation') ||
@@ -2293,11 +2446,6 @@ export function detectAudioEffectKey(text: string): AudioEffectType | null {
     lower.includes('fuzz')
   ) {
     return 'distortion';
-  }
-
-  // Vinyl / Turntable / Phono
-  if (lower.includes('vinyl') || lower.includes('turntable') || lower.includes('phono')) {
-    return 'vinyl';
   }
 
   // Dynamic EQ
