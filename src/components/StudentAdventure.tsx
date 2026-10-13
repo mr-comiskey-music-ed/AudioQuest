@@ -205,11 +205,10 @@ export const StudentAdventure: React.FC<StudentAdventureProps> = ({
   const [playingDemoKey, setPlayingDemoKey] = useState<string | null>(null);
 
   const handlePlayDemo = (demoKey: string) => {
-    soundEngine.playConceptDemo(demoKey);
     setPlayingDemoKey(demoKey);
-    setTimeout(() => {
+    soundEngine.playConceptDemo(demoKey, () => {
       setPlayingDemoKey((current) => (current === demoKey ? null : current));
-    }, 1200);
+    });
   };
 
   const [logs, setLogs] = useState<QuestionAttemptLog[]>(() => {
@@ -425,18 +424,6 @@ export const StudentAdventure: React.FC<StudentAdventureProps> = ({
     setIsCompleted(true);
     // Clear active ongoing adventure save since it's completed
     localStorage.removeItem('aq_active_adventure');
-
-    // Instrument audio playback tag on successful completion of that specific instrument challenge
-    const isInstrumentChallenge =
-      activeScenario.iconName &&
-      (AUDIO_EFFECT_ICONS[activeScenario.iconName as AudioEffectType]?.category === 'instruments' ||
-        ['kick-drum', 'snare-drum', 'drum-set', 'electric-guitar', 'acoustic-guitar', 'bass-guitar', 'piano', 'acoustic-piano'].includes(activeScenario.iconName));
-
-    if (isInstrumentChallenge) {
-      setTimeout(() => {
-        soundEngine.playConceptDemo(activeScenario.iconName);
-      }, 350);
-    }
   };
 
   // 1. CHALLENGE SELECTION SCREEN

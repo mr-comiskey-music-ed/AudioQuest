@@ -3,9 +3,67 @@
  * and audible music production concept demos.
  */
 
+export const RECORDED_EFFECT_AUDIO: Record<string, string> = {
+  'bell-boost': '/audio/bell boost.mp3',
+  'bitcrusher': '/audio/bitcrusher.mp3',
+  'bitcrush': '/audio/bitcrusher.mp3',
+  'chorus': '/audio/chorus.mp3',
+  'compressor': '/audio/compression.mp3',
+  'compression': '/audio/compression.mp3',
+  'de-esser': '/audio/de-ess.mp3',
+  'de-ess': '/audio/de-ess.mp3',
+  'delay': '/audio/delay & echo.mp3',
+  'distortion': '/audio/distortion.mp3',
+  'flanger': '/audio/flanger.mp3',
+  'gated-reverb': '/audio/gated reverb.mp3',
+  'gated': '/audio/gated reverb.mp3',
+  'hi-pass-filter': '/audio/hi-pass filter.mp3',
+  'filter': '/audio/hi-pass filter.mp3',
+  'high-shelf-boost': '/audio/hi shelf boost.mp3',
+  'high-shelf-cut': '/audio/hi shelf cut.mp3',
+  'lo-pass-filter': '/audio/low-pass filter.mp3',
+  'low-shelf-boost': '/audio/low shelf boost.mp3',
+  'low-shelf-cut': '/audio/low shelf cut.mp3',
+  'noise-gate': '/audio/noise gate.mp3',
+  'parallel-compression': '/audio/parallel compression.mp3',
+  'phaser': '/audio/phaser.mp3',
+  'pitch-shifter': '/audio/pitch shifter.mp3',
+  'plate-reverb': '/audio/plate reverb.mp3',
+  'reverb': '/audio/reverb.mp3',
+  'saturation': '/audio/saturation.mp3',
+  'serial-compression': '/audio/serial compression.mp3',
+  'sidechain-compression': '/audio/sidechain compression.mp3',
+  'spring-reverb': '/audio/spring reverb.mp3',
+  'transient-shaper': '/audio/transient shaper.mp3',
+  'tremolo': '/audio/tremolo.mp3',
+};
+
 class SoundEngine {
   private ctx: AudioContext | null = null;
   private isMuted: boolean = false;
+  private currentAudio: HTMLAudioElement | null = null;
+  private currentAudioCleanup: (() => void) | null = null;
+  private progressRafId: number | null = null;
+
+  public stopCurrentAudio() {
+    if (this.progressRafId !== null) {
+      cancelAnimationFrame(this.progressRafId);
+      this.progressRafId = null;
+    }
+    if (this.currentAudioCleanup) {
+      this.currentAudioCleanup();
+      this.currentAudioCleanup = null;
+    }
+    if (this.currentAudio) {
+      try {
+        this.currentAudio.pause();
+        this.currentAudio.currentTime = 0;
+      } catch {
+        // audio pause fallback
+      }
+      this.currentAudio = null;
+    }
+  }
 
   private initCtx() {
     if (!this.ctx && typeof window !== 'undefined') {
@@ -95,8 +153,109 @@ class SoundEngine {
   /**
    * Play interactive audio concept demonstration
    */
-  public playConceptDemo(concept: string) {
-    if (this.isMuted) return;
+  public playConceptDemo(concept: string, onEnd?: () => void, onProgress?: (progress: number) => void) {
+    if (this.isMuted) {
+      onEnd?.();
+      onProgress?.(0);
+      return;
+    }
+
+    // Stop any previously playing audition audio
+    this.stopCurrentAudio();
+    onProgress?.(0);
+
+    // Check if recorded audio clip exists for this effect
+    const audioPath = RECORDED_EFFECT_AUDIO[concept];
+    if (audioPath && typeof window !== 'undefined') {
+      try {
+        const audio = new Audio(encodeURI(audioPath));
+        this.currentAudio = audio;
+
+        // Turn down volume of sidechain compression example another 10% (0.75 total)
+        if (concept === 'sidechain-compression' || concept === 'sidechain' || audioPath.includes('sidechain')) {
+          audio.volume = 0.75;
+        } else {
+          audio.volume = 1.0;
+        }
+
+        let finished = false;
+        let progressTimer: any = null;
+
+        const emitProgress = () => {
+          if (!this.currentAudio || this.currentAudio !== audio) return;
+          const dur = audio.duration;
+          if (dur && !isNaN(dur) && isFinite(dur) && dur > 0) {
+            const p = Math.min(1, Math.max(0, audio.currentTime / dur));
+            onProgress?.(p);
+          }
+        };
+
+        // Listen to timeupdate events and run high-frequency interval
+        audio.addEventListener('timeupdate', emitProgress);
+        audio.addEventListener('loadedmetadata', emitProgress);
+        progressTimer = setInterval(emitProgress, 35);
+
+        const onFinish = () => {
+          if (!finished) {
+            finished = true;
+            if (progressTimer !== null) {
+              clearInterval(progressTimer);
+              progressTimer = null;
+            }
+            if (this.currentAudio === audio) {
+              this.currentAudio = null;
+            }
+            onProgress?.(1);
+            setTimeout(() => onProgress?.(0), 100);
+            onEnd?.();
+          }
+        };
+
+        audio.addEventListener('ended', onFinish);
+        audio.addEventListener('error', onFinish);
+
+        this.currentAudioCleanup = () => {
+          if (progressTimer !== null) {
+            clearInterval(progressTimer);
+            progressTimer = null;
+          }
+          audio.removeEventListener('timeupdate', emitProgress);
+          audio.removeEventListener('loadedmetadata', emitProgress);
+          audio.removeEventListener('ended', onFinish);
+          audio.removeEventListener('error', onFinish);
+        };
+
+        const playPromise = audio.play();
+        if (playPromise !== undefined) {
+          playPromise.catch((err) => {
+            console.warn('Audio playback error:', err);
+            onFinish();
+          });
+        }
+        return;
+      } catch (err) {
+        console.warn('Could not play recorded clip, falling back to synth:', err);
+      }
+    }
+
+    // Fallback: Web Audio synthesis demo with progress tracking
+    const synthDuration = 900;
+    const startTime = performance.now();
+    let synthTimer: any = setInterval(() => {
+      const elapsed = performance.now() - startTime;
+      const p = Math.min(1, elapsed / synthDuration);
+      onProgress?.(p);
+      if (elapsed >= synthDuration) {
+        clearInterval(synthTimer);
+        synthTimer = null;
+        onProgress?.(0);
+      }
+    }, 35);
+
+    if (onEnd) {
+      setTimeout(onEnd, synthDuration);
+    }
+
     try {
       this.initCtx();
       if (!this.ctx) return;

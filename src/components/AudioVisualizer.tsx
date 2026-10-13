@@ -32,8 +32,9 @@ export const AudioVisualizer: React.FC<AudioVisualizerProps> = ({ demoType, titl
 
   const handlePlayDemo = () => {
     setIsPlaying(true);
-    soundEngine.playConceptDemo(demoType);
-    setTimeout(() => setIsPlaying(false), 900);
+    soundEngine.playConceptDemo(demoType, () => {
+      setIsPlaying(false);
+    });
   };
 
   const labels: Record<string, { name: string; desc: string }> = {

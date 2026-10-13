@@ -3,8 +3,6 @@ import {
   X,
   Volume2,
   Play,
-  Sparkles,
-  Filter,
   Sliders,
   Waves,
   Layers,
@@ -13,7 +11,6 @@ import {
   Mic2,
   Guitar,
   Wrench,
-  Compass,
   Boxes,
   Info,
   ArrowLeft,
@@ -23,6 +20,7 @@ import {
   AudioEffectType,
   AudioEffectCard,
   AudioEffectIcon,
+  IconPolarCardioidSimple,
   hasAudioPlayback,
 } from './AudioEngineeringIcons';
 import { soundEngine } from '../utils/audio';
@@ -35,14 +33,14 @@ interface AudioEffectsModalProps {
 
 const CATEGORY_LABELS: Record<string, { label: string; icon: React.ReactNode }> = {
   all: { label: 'All Effects & Gear', icon: <Layers className="w-3.5 h-3.5" /> },
-  frequency: { label: 'EQ', icon: <Filter className="w-3.5 h-3.5" /> },
+  frequency: { label: 'EQ', icon: <AudioEffectIcon name="eq" className="w-3.5 h-3.5" /> },
   dynamics: { label: 'Dynamics', icon: <Sliders className="w-3.5 h-3.5" /> },
   time: { label: 'Space & Modulation', icon: <Waves className="w-3.5 h-3.5" /> },
-  harmonics: { label: 'Distortions', icon: <Sparkles className="w-3.5 h-3.5" /> },
+  harmonics: { label: 'Distortions', icon: <AudioEffectIcon name="distortion" className="w-3.5 h-3.5" /> },
   microphones: { label: 'Microphones', icon: <Mic2 className="w-3.5 h-3.5" /> },
   instruments: { label: 'Instruments', icon: <Guitar className="w-3.5 h-3.5" /> },
   gear: { label: 'Studio Hardware', icon: <Wrench className="w-3.5 h-3.5" /> },
-  'polar-patterns': { label: 'Polar Patterns', icon: <Compass className="w-3.5 h-3.5" /> },
+  'polar-patterns': { label: 'Polar Patterns', icon: <IconPolarCardioidSimple className="w-3.5 h-3.5" /> },
 };
 
 const CATEGORY_ORDER = ['frequency', 'dynamics', 'time', 'harmonics', 'microphones', 'instruments', 'gear', 'polar-patterns'];
@@ -57,6 +55,7 @@ export const AudioEffectsModal: React.FC<AudioEffectsModalProps> = ({
   );
   const [filterCategory, setFilterCategory] = useState<string>('all');
   const [isPlaying, setIsPlaying] = useState(false);
+  const [audioProgress, setAudioProgress] = useState(0);
   const [showMobileDetail, setShowMobileDetail] = useState(Boolean(selectedEffectInitial));
 
   // Directly navigate to the respective gear/effect item and its specific category tab
@@ -73,8 +72,26 @@ export const AudioEffectsModal: React.FC<AudioEffectsModalProps> = ({
         setShowMobileDetail(false);
         setFilterCategory('all');
       }
+    } else {
+      // When modal is closed, stop any active audition audio
+      soundEngine.stopCurrentAudio();
+      setIsPlaying(false);
+      setAudioProgress(0);
     }
   }, [isOpen, selectedEffectInitial]);
+
+  useEffect(() => {
+    // Stop any playing audition audio when switching effects
+    soundEngine.stopCurrentAudio();
+    setIsPlaying(false);
+    setAudioProgress(0);
+  }, [selectedEffect]);
+
+  useEffect(() => {
+    return () => {
+      soundEngine.stopCurrentAudio();
+    };
+  }, []);
 
   if (!isOpen) return null;
 
@@ -107,8 +124,17 @@ export const AudioEffectsModal: React.FC<AudioEffectsModalProps> = ({
 
   const handlePlaySound = (effect: AudioEffectType) => {
     setIsPlaying(true);
-    soundEngine.playConceptDemo(effect);
-    setTimeout(() => setIsPlaying(false), 800);
+    setAudioProgress(0);
+    soundEngine.playConceptDemo(
+      effect,
+      () => {
+        setIsPlaying(false);
+        setAudioProgress(0);
+      },
+      (p) => {
+        setAudioProgress(p);
+      }
+    );
   };
 
   return (
@@ -234,14 +260,36 @@ export const AudioEffectsModal: React.FC<AudioEffectsModalProps> = ({
                   </div>
 
                   {hasAudioPlayback(selectedEffect) ? (
-                    <button
-                      onClick={() => handlePlaySound(selectedEffect)}
-                      disabled={isPlaying}
-                      className="w-full px-4 py-2 text-xs font-bold bg-amber-400 hover:bg-amber-300 text-slate-950 rounded-xl transition-all shadow-md shadow-amber-400/20 flex items-center justify-center gap-2 cursor-pointer active:scale-95"
-                    >
-                      <Play className={`w-3.5 h-3.5 fill-current ${isPlaying ? 'animate-spin' : ''}`} />
-                      <span>{isPlaying ? 'Auditioning...' : `Hear ${activeMeta.name.split(' (')[0]}`}</span>
-                    </button>
+                    <div className="space-y-2 w-full">
+                      <button
+                        onClick={() => {
+                          if (isPlaying) {
+                            soundEngine.stopCurrentAudio();
+                            setIsPlaying(false);
+                            setAudioProgress(0);
+                          } else {
+                            handlePlaySound(selectedEffect);
+                          }
+                        }}
+                        className="w-full px-4 py-2 text-xs font-bold bg-amber-400 hover:bg-amber-300 text-slate-950 rounded-xl transition-all shadow-md shadow-amber-400/20 flex items-center justify-center gap-2 cursor-pointer active:scale-95"
+                      >
+                        <Play className={`w-3.5 h-3.5 fill-current ${isPlaying ? 'animate-spin' : ''}`} />
+                        <span>{isPlaying ? 'Auditioning (Click to stop)' : `Hear ${activeMeta.name.split(' (')[0]}`}</span>
+                      </button>
+
+                      {/* Small yellow progress line indicator just underneath the example play button */}
+                      <div className="w-full h-1.5 bg-slate-800/90 rounded-full overflow-hidden">
+                        <div
+                          className="h-full bg-amber-400 transition-[width] duration-75 ease-linear rounded-full shadow-sm shadow-amber-400/50"
+                          style={{ width: `${Math.min(100, Math.max(0, audioProgress * 100))}%` }}
+                        />
+                      </div>
+                    </div>
+                  ) : selectedEffect === 'limiter' || selectedEffect === 'eq' || selectedEffect === 'dynamic-eq' ? (
+                    <div
+                      className="text-[11px] font-mono bg-slate-950/60 border border-slate-800 px-2.5 py-1 rounded-lg inline-flex items-center h-7 min-w-[120px]"
+                      aria-hidden="true"
+                    />
                   ) : (
                     <div className="text-[11px] font-mono text-slate-400 bg-slate-950/60 border border-slate-800 px-2.5 py-1 rounded-lg inline-flex items-center gap-1.5">
                       <Info className="w-3.5 h-3.5 text-slate-400" />

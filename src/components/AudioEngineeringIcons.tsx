@@ -1363,6 +1363,19 @@ export const IconPolarCardioid: React.FC<AudioIconProps> = ({ className = 'w-6 h
   </svg>
 );
 
+// Simplified Cardioid Pattern: Bold thick pattern without underlying grid and degree markers
+export const IconPolarCardioidSimple: React.FC<AudioIconProps> = ({ className = 'w-6 h-6', ...props }) => (
+  <svg viewBox="16 8 64 54" fill="none" xmlns="http://www.w3.org/2000/svg" className={className} {...props}>
+    <path
+      d="M 48 48 C 48 48, 38 60, 32 60 C 22 60, 18 46, 20 34 C 22 20, 34 10, 48 10 C 62 10, 74 20, 76 34 C 78 46, 74 60, 64 60 C 58 60, 48 48, 48 48 Z"
+      stroke="currentColor"
+      strokeWidth="6"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
+
 // 51. Figure-8 / Bidirectional Polar Pattern (Front & rear lobes, 90°/270° side nulls)
 export const IconPolarFigure8: React.FC<AudioIconProps> = ({ className = 'w-6 h-6', ...props }) => (
   <svg viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg" className={className} {...props}>
@@ -1594,10 +1607,10 @@ export const AUDIO_EFFECT_ICONS: Record<
     description: 'Chains multiple compressors in sequence where each unit applies gentle, transparent gain reduction for smooth and natural dynamic control.',
   },
   'parallel-compression': {
-    name: 'Parallel Compression (New York)',
+    name: 'Parallel Compression',
     component: IconParallelCompression,
     category: 'dynamics',
-    description: 'Blends a heavily squashed and saturated parallel copy with the uncompressed dry signal to retain transient punch while thickening sustain.',
+    description: 'Blends a heavily squashed and saturated parallel copy with the uncompressed dry signal to retain transient punch while thickening sustain. Also called "New York Compression."',
   },
   'sidechain-compression': {
     name: 'Sidechain Compression',
@@ -2018,11 +2031,15 @@ export const AudioEffectCard: React.FC<{
  * - Polar Patterns (polar-patterns)
  * - Other non-pitch-shifter items
  */
+const EXCLUDED_PLAYBACK_KEYS: AudioEffectType[] = ['limiter', 'eq', 'dynamic-eq'];
+
 export const hasAudioPlayback = (effectKey: AudioEffectType): boolean => {
-  if (effectKey === 'pitch-shifter') return true;
+  if (EXCLUDED_PLAYBACK_KEYS.includes(effectKey)) return false;
   const meta = AUDIO_EFFECT_ICONS[effectKey];
   if (!meta) return false;
-  const allowedCategories: string[] = ['frequency', 'dynamics', 'time', 'harmonics', 'instruments'];
+  if (meta.category === 'instruments') return false;
+  if (effectKey === 'pitch-shifter') return true;
+  const allowedCategories: string[] = ['frequency', 'dynamics', 'time', 'harmonics'];
   return allowedCategories.includes(meta.category);
 };
 
